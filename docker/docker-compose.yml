@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+    database:
+        image: mariadb
+        container_name: "laravel_db"
+        environment:
+            MYSQL_ROOT_PASSWORD: "laravel_db"
+            MYSQL_DATABASE: "laravel_db"
+            MYSQL_USER: "jupiter"
+            MYSQL_PASSWORD: "thebe"
+        networks:
+            - services
+
+    dbadmin:
+        image: phpmyadmin
+        container_name: "db_admin"
+        depends_on:
+            - database
+        environment:
+            - PMA_ARBITRARY=1
+        networks:
+            - services
+
+networks:
+    services:
+        name: db_network
+        driver: bridge
