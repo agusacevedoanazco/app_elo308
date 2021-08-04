@@ -3,39 +3,37 @@
 use Illuminate\Support\Facades\Route;
 
 /** Public Controllers */
+use App\Http\Controllers\HomePageController;
 
 /** Auth Controllers */
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Auth\RegisterController;
 
 /** Admin Controllers */
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as UserHomeController;
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+/**
+ * Se definen las rutas de la aplicacion.
+ * Las rutas se encuentran separadas en publicas, administrativas y de usuario
+ * Las direcciones son resueltas mediante el enrutado por middleware de resolucion
+ * de rol de usuario y autenticacion de usuario.
+ */
 /** Public Routes */
-Route::get('/', function(){ return view('public.welcome'); });
+Route::get('/', [HomePageController::class, 'index'])->name('index');
+
 Route::get('/login', [LoginController::class, 'index'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'store']);
+
+Route::get('/signup', [RegisterController::class, 'index'])->name('signup');
+Route::post('/signup', [RegisterController::class, 'store']);
 
 /** Authenticated Routes */
 Route::group(['middleware'=>'auth'], function (){
-    Route::post('/logout', [LogoutController::class, 'logout'])->name('logout');
+    Route::post('/logout', [LogoutController::class, 'destroy'])->name('logout');
 
     /** Admin Routes */
     Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'], function() {
@@ -48,4 +46,11 @@ Route::group(['middleware'=>'auth'], function (){
     });
 });
 
+/** Testing routes */
+Route::group(['prefix' => 'test'], function(){
+    Route::get('admin', function() { return view('admin.test'); } );
+    Route::get('user', function() { return view('user.test'); } );
+});
 
+/** Fallback route */
+Route::fallback( function() { return redirect()->route('login'); } );

@@ -7,24 +7,29 @@ use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['guest']);
+    }
+
     public function index()
     {
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function store(Request $request)
     {
         $this->validate($request , [
-            'email' => 'required|email|',
+            'email' => 'required|email',
             'password' => 'required',
         ]);
 
         if (!auth()->attempt($request->only('email', 'password')))
         {
-            return back()->with('status','Invalid login credentials');
+            return back()->with('status','Las credenciales proporcionadas no son válidas. Intente nuevamente');
         } else
         {
-            return (auth()->check() && auth()->user()->isAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('user.homepage');
+            return ( auth()->user()->isAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('user.homepage');
         }
 
     }

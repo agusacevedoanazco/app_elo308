@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use function Faker\Provider\pt_BR\check_digit;
 
 class HomePageController extends Controller
 {
@@ -14,7 +15,12 @@ class HomePageController extends Controller
         }
         else
         {
-            return view('public.welcome');
+            return dd('no contents');
         }
+    }
+
+    public function fallback()
+    {
+        return redirect()->route('index');
     }
 }

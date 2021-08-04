@@ -3,7 +3,7 @@ version: "3"
 services:
     database:
         image: mariadb
-        container_name: "laravel_db"
+        container_name: "appdb"
         environment:
             MYSQL_ROOT_PASSWORD: "laravel_db"
             MYSQL_DATABASE: "laravel_db"
@@ -14,7 +14,7 @@ services:
 
     dbadmin:
         image: phpmyadmin
-        container_name: "db_admin"
+        container_name: "admindb"
         depends_on:
             - database
         environment:
