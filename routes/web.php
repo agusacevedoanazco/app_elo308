@@ -41,7 +41,7 @@ Route::group(['middleware'=>'auth'], function (){
     });
 
     /** User Routes */
-    Route::group(['prefix' => 'user', 'as' => 'user.', 'middleware' => 'user'], function(){
+    Route::group(['prefix' => 'app', 'as' => 'app.', 'middleware' => 'user'], function(){
         Route::get('/home', [UserHomeController::class, 'index'])->name('homepage');
     });
 });

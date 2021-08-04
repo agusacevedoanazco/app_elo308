@@ -39,6 +39,6 @@ class RegisterController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return $user->isAdmin() ?  redirect()->route('admin.homepage') : redirect()->route('user.homepage');
+        return $user->isAdmin() ?  redirect()->route('admin.homepage') : redirect()->route('app.homepage');
     }
 }

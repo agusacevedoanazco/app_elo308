@@ -14,7 +14,7 @@ class AsignaturaController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
