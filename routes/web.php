@@ -12,6 +12,7 @@ use App\Http\Controllers\Auth\RegisterController;
 
 /** Admin Controllers */
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
+use App\Http\Controllers\Admin\Departamento\DepartamentoController;
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as UserHomeController;
@@ -38,6 +39,23 @@ Route::group(['middleware'=>'auth'], function (){
     /** Admin Routes */
     Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'], function() {
         Route::get('/home', [AdminHomeController::class, 'index'])->name('homepage');
+
+
+        /** Departamentos Controller */
+        Route::resource('/departamentos', DepartamentoController::class)->except(['show']);
+
+        /**
+        Route::get('/departamentos', [DepartamentoController::class, 'index'])->name('departamentos');
+
+        Route::get('/departamentos/create', [DepartamentoController::class, 'create'])->name('departamentos.create');
+        Route::post('/departamentos', [DepartamentoController::class, 'store']);
+
+        Route::get('/departamentos/edit/{id}', [DepartamentoController::class, 'edit'])->name('departamentos.edit');
+        Route::patch('/departamentos/{id}', [DepartamentoController::class, 'update']);
+
+        Route::delete('/departamentos/{id}',[DepartamentoController::class, 'destroy']);
+        **/
+
     });
 
     /** User Routes */

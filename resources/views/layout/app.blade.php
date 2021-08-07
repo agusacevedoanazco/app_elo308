@@ -19,7 +19,7 @@
             @endguest
         </ul>
     </header>
-    <main>
+    <main class="mt-4 container">
         @yield('content')
     </main>
 @endsection

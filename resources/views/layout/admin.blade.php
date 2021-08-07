@@ -1,7 +1,7 @@
 @extends('layout.basic')
 
 @section('body')
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-center">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-center shadow">
         <a class="navbar-brand mr-auto" href="#">App</a>
         <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -15,7 +15,7 @@
                     <a class="nav-link" href="#">Usuarios</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Departamentos</a>
+                    <a class="nav-link" href="{{ route('admin.departamentos.index') }}">Departamentos</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Asignaturas</a>
@@ -40,7 +40,7 @@
             </ul>
         </div>
     </nav>
-    <main>
+    <main class="mt-4 container">
         @yield('content')
     </main>
 @endsection
