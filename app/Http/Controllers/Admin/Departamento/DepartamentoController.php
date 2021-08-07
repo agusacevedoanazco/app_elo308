@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Admin\Departamento;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class AsignaturaController extends Controller
+class DepartamentoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class AsignaturaController extends Controller
      */
     public function index()
     {
-
+        //
     }
 
     /**

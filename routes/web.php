@@ -46,11 +46,5 @@ Route::group(['middleware'=>'auth'], function (){
     });
 });
 
-/** Testing routes */
-Route::group(['prefix' => 'test'], function(){
-    Route::get('admin', function() { return view('admin.test'); } );
-    Route::get('user', function() { return view('user.test'); } );
-});
-
 /** Fallback route */
 Route::fallback( function() { return redirect()->route('login'); } );

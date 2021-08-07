@@ -47,4 +47,9 @@ class User extends Authenticatable
     {
         return $this->role === 0;
     }
+
+    public function matriculas()
+    {
+        return $this->hasMany(Matricula::class);
+    }
 }

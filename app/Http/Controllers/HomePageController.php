@@ -11,11 +11,11 @@ class HomePageController extends Controller
     {
         if ( auth()->check() )
         {
-            return ( auth()->user()->isAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('user.homepage');
+            return ( auth()->user()->isAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('app.homepage');
         }
         else
         {
-            return dd('no contents');
+            return view('index');
         }
     }
 

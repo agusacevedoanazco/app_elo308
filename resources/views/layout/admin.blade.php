@@ -1,24 +1,45 @@
 @extends('layout.basic')
 
 @section('body')
-    <header class="navbar navbar-expand-md navbar-dark bg-dark justify-content-center shadow">
-        <ul class="navbar-nav mr-auto">
-            <li class="navbar-brand">Video App</li>
-            @auth()
-                <li class="nav-item mx-2"><a class="nav-link" href="">Link 1</a></li>
-                <li class="nav-item mx-2"><a class="nav-link" href="">Link 2</a></li>
-                <li class="nav-item mx-2"><a class="nav-link" href="">Link 3</a></li>
-            @endauth
-        </ul>
-        <ul class="navbar-nav">
-            @auth()
-                <li class="nav-item mx-2"><form action="{{ route('logout') }}" method="POST">@csrf<button type="submit" class="nav-link btn btn-danger text-white">Cerrar Sesión</button></form></li>
-            @endauth
-            @guest()
-                <li class="nav-item mx-2"><a class="nav-link btn btn-primary text-white" href="{{ route('login') }}">Iniciar Sesión</a></li>
-            @endguest
-        </ul>
-    </header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark justify-content-center">
+        <a class="navbar-brand mr-auto" href="#">App</a>
+        <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Usuarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Departamentos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Asignaturas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Matriculas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Eventos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Publicaciones</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <form class="form-inline" action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
     <main>
         @yield('content')
     </main>
