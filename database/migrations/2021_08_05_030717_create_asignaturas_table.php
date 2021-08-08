@@ -23,6 +23,7 @@ class CreateAsignaturasTable extends Migration
             $table->integer('anio');
             $table->integer('semestre');
             $table->integer('paralelo');
+            $table->string('codigo',6);
 
             $table->foreignId('id_departamento')->constrained('departamentos')->cascadeOnDelete();
 

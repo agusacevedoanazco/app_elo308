@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\RegisterController;
 /** Admin Controllers */
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Departamento\DepartamentoController;
+use App\Http\Controllers\Admin\Asignatura\AsignaturaController as AdminAsignaturaController;
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as UserHomeController;
@@ -44,17 +45,8 @@ Route::group(['middleware'=>'auth'], function (){
         /** Departamentos Controller */
         Route::resource('/departamentos', DepartamentoController::class)->except(['show']);
 
-        /**
-        Route::get('/departamentos', [DepartamentoController::class, 'index'])->name('departamentos');
-
-        Route::get('/departamentos/create', [DepartamentoController::class, 'create'])->name('departamentos.create');
-        Route::post('/departamentos', [DepartamentoController::class, 'store']);
-
-        Route::get('/departamentos/edit/{id}', [DepartamentoController::class, 'edit'])->name('departamentos.edit');
-        Route::patch('/departamentos/{id}', [DepartamentoController::class, 'update']);
-
-        Route::delete('/departamentos/{id}',[DepartamentoController::class, 'destroy']);
-        **/
+        /** Asignaturas Controller */
+        Route::resource('/asignaturas', AdminAsignaturaController::class);
 
     });
 

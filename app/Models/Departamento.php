@@ -17,6 +17,6 @@ class Departamento extends Model
 
     public function asignaturas()
     {
-        return $this->hasMany(Asignatura::class);
+        return $this->hasMany(Asignatura::class, 'id_departamento','id');
     }
 }

@@ -15,11 +15,12 @@ class Asignatura extends Model
         'nombre',
         'anio',
         'semestre',
-        'paralelo'
+        'paralelo',
+        'codigo',
     ];
 
     public function departamento()
     {
-        return $this->belongsTo(Departamento::class);
+        return $this->belongsTo(Departamento::class,'id_departamento');
     }
 }

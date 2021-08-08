@@ -18,7 +18,7 @@
                     <a class="nav-link" href="{{ route('admin.departamentos.index') }}">Departamentos</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Asignaturas</a>
+                    <a class="nav-link" href="{{ route('admin.asignaturas.index') }}">Asignaturas</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Matriculas</a>

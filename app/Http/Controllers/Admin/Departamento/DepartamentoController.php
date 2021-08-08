@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Departamento;
 
 use App\Http\Controllers\Controller;
 use App\Models\Departamento;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class DepartamentoController extends Controller
@@ -15,7 +16,7 @@ class DepartamentoController extends Controller
      */
     public function index()
     {
-        $departamentos = Departamento::paginate(2);
+        $departamentos = Departamento::paginate(10);
 
         return view('admin.departamentos.index', [
             'departamentos' => $departamentos
@@ -74,9 +75,16 @@ class DepartamentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        //
+        try{
+            $departamento = Departamento::findOrfail($id);
+            return view('admin.departamentos.edit')->with([
+                'departamento' => $departamento]
+            );
+        } catch (ModelNotFoundException $e){
+            return view('admin.departamentos.edit');
+        }
     }
 
     /**
@@ -86,9 +94,26 @@ class DepartamentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
-        dd($request,$id);
+        $this->validate($request,[
+            'nombre' => 'max:255',
+            'carrera' => 'max:255',
+        ]);
+
+        try {
+            $departamento = Departamento::findOrfail($id);
+            $departamento->nombre = $request->nombre;
+            $departamento->carrera = $request->carrera;
+            $departamento->save();
+            return back()->with([
+                'okmsg' => 'El departamento ha sido actualizado con éxito!',
+            ]);
+        } catch (ModelNotFoundException $e){
+            return back()->with([
+                'errormsg' => 'Error! No se pudo actualizar el departamento, ya que no se encuentra en la base de datos.'
+            ]);
+        }
     }
 
     /**
@@ -97,8 +122,18 @@ class DepartamentoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
-        dd($id);
+        try{
+            $departamento = Departamento::findOrfail($id);
+            $departamento->delete();
+            return back()->with([
+                'okmsg' => 'El departamento ha sido eliminado satisfactoriamente.',
+            ]);
+        } catch (ModelNotFoundException $e){
+            return back()->with([
+                'errormsg' => 'Error! No se pudo eliminar el departamento, ya que no se encuentra enla base de datos.'
+            ]);
+        }
     }
 }

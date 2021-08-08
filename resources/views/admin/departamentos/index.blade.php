@@ -2,6 +2,12 @@
 
 @section('content')
     <div class="jumbotron">
+        @if (session()->has('okmsg'))
+            <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
+        @endif
+        @if (session()->has('errormsg'))
+            <div class="alert alert-danger text-center">{{ session('errormsg') }}</div>
+        @endif
         <div class="display-4 text-center">
             <h1>Departamentos</h1>
         </div>

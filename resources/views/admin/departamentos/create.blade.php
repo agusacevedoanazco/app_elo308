@@ -11,10 +11,13 @@
                             @if (session()->has('okmsg'))
                                 <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
                             @endif
+                            @if (session()->has('errormsg'))
+                                <div class="alert alert-danger text-center">{{ session('errormsg') }}</div>
+                            @endif
                             <form action="{{ route('admin.departamentos.store') }}" method="post">
                                 @csrf
                                 <div class="input-group mb-3">
-                                    <input class="form-control @error('nombre') border-danger @enderror" type="text" name="nombre" id="name" placeholder="Nombre" value="{{ old('nombre') }}">
+                                    <input class="form-control @error('nombre') border-danger @enderror" type="text" name="nombre" id="name" placeholder="Departamento" value="{{ old('nombre') }}">
                                 </div>
                                 @error('nombre')
                                 <div class="alert alert-danger" role="alert">
