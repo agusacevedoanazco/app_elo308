@@ -114,19 +114,74 @@ class AsignaturaController extends Controller
      */
     public function edit($id)
     {
-        //
+        $asignatura = Asignatura::find($id);
+
+        return view('admin.asignaturas.edit')->with([
+            'asignatura' => $asignatura,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Asignatura $asignatura
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Asignatura $asignatura)
     {
-        //
+        //Validar los valores ingresados
+        $this->validate($request,[
+            'nombre' => 'max:255|required',
+            'anio' => 'digits:4|required',
+            'semestre' => 'required|digits:1',
+            'paralelo' => 'min:1|max:99|required',
+        ]);
+
+        //Asegurar que no hay cambios, para evitar realizar la llamada al servicio
+        if ($asignatura->nombre == $request->nombre &&
+            $asignatura->anio == $request->anio &&
+            $asignatura->semestre == $request->semestre &&
+            $asignatura->paralelo == $request->paralelo)
+            return back()->with([
+                'warnmsg' => 'No se guardaron los cambios'
+            ]);
+        else{
+            $oc_title = $asignatura->codigo . 'P' . $request->paralelo . $request->anio . 'S' . $request->semestre;
+            $oc_description = $request->nombre;
+            $oc_series_id = $asignatura->oc_series_id;
+            $tmpasignatura = Asignatura::where('oc_series_name',$oc_title)->first();
+
+            if ($tmpasignatura->exists()){
+                if ($tmpasignatura->id != $asignatura->id) return back()->with('errmsg','La asignatura ingresada ya se encuentra registrada');
+            }
+
+            //actualiza la serie asociada en el servicio Opencast
+            $response = $this->updateApiSeries($oc_title,$oc_description,$oc_series_id);
+
+            if ($response->successful())
+            {
+                //guardar la información en la base de datos
+                $asignatura->nombre = $request->nombre;
+                $asignatura->anio = $request->anio;
+                $asignatura->semestre = $request->semestre;
+                $asignatura->paralelo = $request->paralelo;
+                return $asignatura->save() ? back()->with('okmsg','Asignatura actualizada satisfactoriamente') : back()->with('errmsg','La asignatura fue modificada en el servicio Opencast, pero no pudo ser actualizada en el sistema de administración');
+
+
+                //retornar de forma satisfactoria
+            }
+            else
+            {
+                 if ($response->failed())
+                 {
+                     if($response->clientError()) return back()->with('errmsg','Hubo un error al guardar la información en el servicio Opencast');
+                     elseif ($response->serverError()) return back()->with('warnmsg','Hubo un error al procesar la información en el servicio Opencast');
+                     else return back()->with('errmsg','Ocurrió un error desconocido');
+                 }
+                 else return back()->with('errmsg','Ocurrió un error desconocido');
+            }
+        }
     }
 
     /**
@@ -135,9 +190,16 @@ class AsignaturaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Asignatura $asignatura)
     {
-        //
+        $response = $this->deleteApiSeries($asignatura->oc_series_id);
+
+        if ($response->successful())
+        {
+            return $asignatura->delete() ? back()->with('okmsg','Asignatura eliminada satisfactoriamente') : back()->with('errmsg','La asignatura no pudo ser eliminada del servicio de administración local, pero fue eliminada del servicio Opencast');
+        }
+        elseif ($response->serverError()) return back()->with('warnmsg','Hubo un error al eliminar la asignatura en el servicio Opencast, series_id'.$asignatura->oc_series_id);
+        else return back()->with('errmsg','No se pudo eliminar la asignatura seleccionada');
     }
 
     private function postApiSeries(string $title, string $subject, string $description)
@@ -205,5 +267,36 @@ class AsignaturaController extends Controller
                 'data' => $exception->getMessage(),
             ];
         }
+    }
+
+    private function updateApiSeries(string $title, string $description, string $series_id)
+    {
+        //set the uri
+        $uri = env('OPENCAST_URL')."/api/series/".$series_id."/metadata?type=dublincore/series";
+
+        $metadata = json_encode([
+            [
+                'id' => 'title',
+                'value' => $title,
+            ],
+            [
+                'id' => 'description',
+                'value' => $description,
+            ],
+        ]);
+
+        return Http::withoutVerifying()
+            ->withBasicAuth(env('OPENCAST_USER' ), env('OPENCAST_PASSWORD'))
+            ->attach('metadata', $metadata)
+            ->put($uri);
+    }
+
+    private function deleteApiSeries(string $series_id)
+    {
+        $uri = env('OPENCAST_URL')."/api/series/".$series_id;
+
+        return Http::withoutVerifying()
+            ->withBasicAuth(env('OPENCAST_USER'),env('OPENCAST_PASSWORD'))
+            ->delete($uri);
     }
 }

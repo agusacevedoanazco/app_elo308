@@ -39,7 +39,7 @@
                     <td>{{$asignatura->paralelo}}</td>
                     <td>{{$asignatura->departamento->nombre}}</td>
                     <td><a href="{{ route('admin.asignaturas.edit',['asignatura'=>$asignatura]) }}" class="btn btn-warning">Editar</a></td>
-                    <td><form action="{{ route('admin.asignaturas.destroy',['asignatura'=>$asignatura]) }}" method="post">
+                    <td><form action="{{ route('admin.asignaturas.destroy',$asignatura) }}" method="post">
                             @csrf
                             @method('delete')
                             <button type="submit" class="btn btn-danger">Eliminar</button>
