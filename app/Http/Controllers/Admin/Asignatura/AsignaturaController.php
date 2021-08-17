@@ -52,7 +52,7 @@ class AsignaturaController extends Controller
             'nombre' => 'max:255|required',
             'anio' => 'digits:4|required',
             'semestre' => 'required|digits:1',
-            'paralelo' => 'min:1|max:99|required',
+            'paralelo' => 'min:1|max:999|required',
             'codigo' => 'digits:3|required',
             'depto' => 'exists:departamentos,id|required',
         ]);
@@ -63,7 +63,7 @@ class AsignaturaController extends Controller
             return back()->with('errmsg','No se pudo encontrar el departamento seleccionado en la base de datos');
         }
 
-        $oc_title = $departamento->sigla . $request->codigo . 'P' . $request->paralelo . $request->anio . 'S' . $request->semestre;
+        $oc_title = $departamento->sigla . $request->codigo . '_' . $request->anio . 'S' . $request->semestre . 'P' . $request->paralelo;
         $oc_subject = $departamento->sigla . $request->codigo;
         $oc_description = $request->nombre;
 
@@ -135,7 +135,7 @@ class AsignaturaController extends Controller
             'nombre' => 'max:255|required',
             'anio' => 'digits:4|required',
             'semestre' => 'required|digits:1',
-            'paralelo' => 'min:1|max:99|required',
+            'paralelo' => 'min:1|max:999|required',
         ]);
 
         //Asegurar que no hay cambios, para evitar realizar la llamada al servicio
@@ -147,7 +147,7 @@ class AsignaturaController extends Controller
                 'warnmsg' => 'No se guardaron los cambios'
             ]);
         else{
-            $oc_title = $asignatura->codigo . 'P' . $request->paralelo . $request->anio . 'S' . $request->semestre;
+            $oc_title = $asignatura->codigo . '_' . $request->anio . 'S' . $request->semestre . 'P' . $request->paralelo;
             $oc_description = $request->nombre;
             $oc_series_id = $asignatura->oc_series_id;
             $tmpasignatura = Asignatura::where('oc_series_name',$oc_title)->first();

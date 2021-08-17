@@ -14,6 +14,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Departamento\DepartamentoController;
 use App\Http\Controllers\Admin\Asignatura\AsignaturaController as AdminAsignaturaController;
+use App\Http\Controllers\Admin\Evento\EventoController as AdminEventoController;
+use App\Http\Controllers\Admin\Evento\FilepondController as AdminFilepondController;
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as UserHomeController;
@@ -41,12 +43,18 @@ Route::group(['middleware'=>'auth'], function (){
     Route::group(['middleware' => 'admin', 'prefix' => 'admin', 'as' => 'admin.'], function() {
         Route::get('/home', [AdminHomeController::class, 'index'])->name('homepage');
 
-
-        /** Departamentos Controller */
+        /** Departamentos Controllers */
         Route::resource('/departamentos', DepartamentoController::class)->except(['show']);
 
-        /** Asignaturas Controller */
-        Route::resource('/asignaturas', AdminAsignaturaController::class);
+        /** Asignaturas Controllers */
+        Route::resource('/asignaturas', AdminAsignaturaController::class)->except(['show']);
+
+        /** Eventos Controllers */
+        Route::resource('/eventos', AdminEventoController::class);
+
+        /** Upload Controllers */
+        Route::post('/upload/filepond',[AdminFilepondController::class,'store'])->name('filepond');
+        Route::delete('/upload/filepond',[AdminFilepondController::class,'destroy']);
 
     });
 
@@ -55,6 +63,13 @@ Route::group(['middleware'=>'auth'], function (){
         Route::get('/home', [UserHomeController::class, 'index'])->name('homepage');
     });
 });
+
+/** Upload Controller
+ *  Se deja afuera de las rutas privadas (user/admin), dado que no se puede pasar por el middleware,
+ *  de igual forma, no existen problemas de seguridad, dado que requiere del cross forgery token de sesion
+ *  el cual se asocia a una cuenta.
+ */
+//Route::post('/upload/fpendpoint',[EventoUploadController::class,'store'])->name('fpupload');
 
 /** Fallback route */
 Route::fallback( function() { return redirect()->route('login'); } );

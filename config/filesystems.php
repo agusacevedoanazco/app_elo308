@@ -35,6 +35,13 @@ return [
             'root' => storage_path('app'),
         ],
 
+        /** Disco para almacenar videos por enviar al servicio Opencast */
+
+        'videos' => [
+            'driver' => 'local',
+            'root' => storage_path('app/videos'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

@@ -7,9 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>App</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @yield('filepondcss')
     <script src="{{ asset('js/app.js') }}"></script>
 </head>
 <body class="bg-light">
     @yield('body')
+    @yield('filepondjs')
 </body>
 </html>
