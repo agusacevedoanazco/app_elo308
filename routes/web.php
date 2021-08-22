@@ -29,6 +29,8 @@ use App\Http\Controllers\User\HomeController as UserHomeController;
 /** Public Routes */
 Route::get('/', [HomePageController::class, 'index'])->name('index');
 
+Route::get('/test',[HomePageController::class, 'test'])->name('test');
+
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
 
@@ -63,13 +65,6 @@ Route::group(['middleware'=>'auth'], function (){
         Route::get('/home', [UserHomeController::class, 'index'])->name('homepage');
     });
 });
-
-/** Upload Controller
- *  Se deja afuera de las rutas privadas (user/admin), dado que no se puede pasar por el middleware,
- *  de igual forma, no existen problemas de seguridad, dado que requiere del cross forgery token de sesion
- *  el cual se asocia a una cuenta.
- */
-//Route::post('/upload/fpendpoint',[EventoUploadController::class,'store'])->name('fpupload');
 
 /** Fallback route */
 Route::fallback( function() { return redirect()->route('login'); } );

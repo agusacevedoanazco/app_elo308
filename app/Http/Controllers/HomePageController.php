@@ -19,6 +19,11 @@ class HomePageController extends Controller
         }
     }
 
+    public function test()
+    {
+        return view('test');
+    }
+
     public function fallback()
     {
         return redirect()->route('index');
