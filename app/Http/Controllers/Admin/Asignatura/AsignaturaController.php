@@ -150,9 +150,9 @@ class AsignaturaController extends Controller
             $oc_title = $asignatura->codigo . '_' . $request->anio . 'S' . $request->semestre . 'P' . $request->paralelo;
             $oc_description = $request->nombre;
             $oc_series_id = $asignatura->oc_series_id;
-            $tmpasignatura = Asignatura::where('oc_series_name',$oc_title)->first();
+            $tmpasignatura = Asignatura::firstWhere('oc_series_name',$oc_title);
 
-            if ($tmpasignatura->exists()){
+            if (!is_null($tmpasignatura)){
                 if ($tmpasignatura->id != $asignatura->id) return back()->with('errmsg','La asignatura ingresada ya se encuentra registrada');
             }
 
@@ -166,6 +166,7 @@ class AsignaturaController extends Controller
                 $asignatura->anio = $request->anio;
                 $asignatura->semestre = $request->semestre;
                 $asignatura->paralelo = $request->paralelo;
+                $asignatura->oc_series_name = $oc_title;
                 return $asignatura->save() ? back()->with('okmsg','Asignatura actualizada satisfactoriamente') : back()->with('errmsg','La asignatura fue modificada en el servicio Opencast, pero no pudo ser actualizada en el sistema de administración');
 
 

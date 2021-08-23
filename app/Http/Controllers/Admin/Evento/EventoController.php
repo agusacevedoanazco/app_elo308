@@ -95,7 +95,6 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -104,9 +103,19 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id)
     {
-        //
+        try
+        {
+            $evento = Evento::findOrFail($id);
+            return view('admin.eventos.edit')->with([
+                "evento" => $evento,
+            ]);
+        }catch (ModelNotFoundException $exception)
+        {
+            return view('admin.eventos.index');
+        }
+
     }
 
     /**

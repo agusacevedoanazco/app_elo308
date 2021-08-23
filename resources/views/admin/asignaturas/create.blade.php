@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layout.admin2')
 
 @section('content')
     <div class="row justify-content-center">
@@ -7,7 +7,7 @@
                 <div class="card p-4">
                     <div class="card-body">
                         <h1>Crear una nueva Asignatura</h1>
-                        <p class="text-muted">Crea una nueva asignatura y es registrada en el servidor Opencast</p>
+                        <p class="text-muted">Crea una nueva asignatura y la registra en el servidor Opencast</p>
                         @if (session()->has('okmsg'))
                             <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
                         @endif

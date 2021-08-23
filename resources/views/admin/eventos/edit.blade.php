@@ -12,7 +12,7 @@
                 <div class="card p-4">
                     <div class="card-body">
                         <h1>Crear un Evento</h1>
-                        <p class="text-muted">Crea un nuevo evento, subiendo un video en espera a ser procesado</p>
+                        <p class="text-muted">Actualiza el nombre, descripcion o publicacion del evento seleccionado</p>
                         @if (session()->has('okmsg'))
                             <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
                         @endif
@@ -22,10 +22,12 @@
                         @if (session()->has('warnmsg'))
                             <div class="alert alert-warning text-center">{{ session('warnmsg') }}</div>
                         @endif
-                        <form action="{{ route('admin.eventos.store') }}" method="post">
+                        @isset($evento)
+                        <form action="{{ route('admin.eventos.update', $evento) }}" method="post">
                             @csrf
+                            @method('put')
                             <div class="input-group mb-3">
-                                <input class="form-control @error('titulo') border-danger @enderror" type="text" name="titulo" id="titulo" placeholder="Título del evento">
+                                <input class="form-control @error('titulo') border-danger @enderror" type="text" name="titulo" id="titulo" placeholder="Título del evento" value="{{ $evento->titulo }}">
                             </div>
                             @error('titulo')
                             <div class="alert alert-danger" role="alert">
@@ -34,25 +36,9 @@
                             @enderror
 
                             <div class="input-group mb-3">
-                                <input class="form-control @error('descripcion') border-danger @enderror" type="text" name="descripcion" id="descripcion" placeholder="Descripción del evento">
+                                <input class="form-control @error('descripcion') border-danger @enderror" type="text" name="descripcion" id="descripcion" placeholder="Descripción del evento" value="{{ $evento->descripcion }}">
                             </div>
                             @error('descripcion')
-                            <div class="alert alert-danger" role="alert">
-                                {{$message}}
-                            </div>
-                            @enderror
-
-                            <div class="input-group mb-3">
-                                <select class="form-control" name="asignatura" id="asignatura">
-                                    <option value="{{ null }}" selected>Seleccione la asignatura</option>
-                                    @isset($asignaturas)
-                                        @foreach($asignaturas as $asignatura)
-                                            <option value="{{ $asignatura->id }}">{{$asignatura->oc_series_name}}</option>
-                                        @endforeach
-                                    @endisset
-                                </select>
-                            </div>
-                            @error('asignatura')
                             <div class="alert alert-danger" role="alert">
                                 {{$message}}
                             </div>
@@ -73,6 +59,9 @@
                                 </div>
                             </div>
                         </form>
+                        @else
+
+                        @endisset
                     </div>
                 </div>
             </div>

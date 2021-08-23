@@ -1,4 +1,4 @@
-@extends('layout.admin')
+@extends('layout.admin2')
 
 @section('content')
     <div class="row justify-content-center">
@@ -21,6 +21,9 @@
                             <form action="{{ route('admin.asignaturas.update', $asignatura) }}" method="post">
                                 @csrf
                                 @method('put')
+                                <div class="input-group mb-3">
+                                    <input class="form-control" type="text" placeholder="{{$asignatura->oc_series_name}}" readonly>
+                                </div>
                                 <div class="input-group mb-3">
                                     <input class="form-control @error('nombre') border-danger @enderror" type="text" name="nombre" id="nombre" placeholder="Nombre de la Asignatura" value="{{ $asignatura->nombre }}">
                                 </div>
