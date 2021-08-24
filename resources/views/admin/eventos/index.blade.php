@@ -13,7 +13,7 @@
     <div class="btn-toolbar mb-2">
         <a href="{{ route('admin.eventos.create') }}"><button class="btn btn-primary">Nuevo evento</button></a>
     </div>
-    @if($eventos->count())
+    @isset($eventos)
         <table class="table">
             <thead class="thead-dark">
             <tr>
@@ -60,5 +60,5 @@
         {{ $eventos->links() }}
     @else
         <div class="alert alert-warning text-center">No se encontraron eventos en la base de datos.</div>
-    @endif
+    @endisset
 @endsection

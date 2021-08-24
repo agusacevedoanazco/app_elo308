@@ -83,7 +83,7 @@ class DepartamentoController extends Controller
                 'departamento' => $departamento]
             );
         } catch (ModelNotFoundException $e){
-            return view('admin.departamentos.edit');
+            return redirect()->route('admin.departamentos.index');
         }
     }
 

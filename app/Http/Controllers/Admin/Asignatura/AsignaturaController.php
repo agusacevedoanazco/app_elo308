@@ -114,11 +114,16 @@ class AsignaturaController extends Controller
      */
     public function edit($id)
     {
-        $asignatura = Asignatura::find($id);
-
-        return view('admin.asignaturas.edit')->with([
-            'asignatura' => $asignatura,
-        ]);
+        try
+        {
+            $asignatura = Asignatura::findOrFail($id);
+            return view('admin.asignaturas.edit')->with([
+                'asignatura' => $asignatura,
+            ]);
+        }catch (ModelNotFoundException $exception)
+        {
+            return redirect()->route('admin.asignaturas.index');
+        }
     }
 
     /**

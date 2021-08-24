@@ -55,12 +55,12 @@
 
                             <div class="col-6">
                                 <div class="row">
-                                    <button class="btn btn-primary px-4" type="submit">Crear Evento</button>
+                                    <button class="btn btn-primary px-4" type="submit">Actualizar Evento</button>
                                 </div>
                             </div>
                         </form>
                         @else
-
+                            <div class="alert alert-danger text-center">El evento seleccionado no existe!</div>
                         @endisset
                     </div>
                 </div>
@@ -72,13 +72,17 @@
 @section('filepondjs')
     <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
     <script>
         FilePond.registerPlugin(FilePondPluginFileValidateType);
+        FilePond.registerPlugin(FilePondPluginFileValidateSize);
         const inputElement = document.querySelector('#evento_video');
         const pond = FilePond.create(inputElement);
         pond.setOptions({
             acceptedFileTypes : ['video/mp4','video/mpeg','video/webm','video/quicktime','video/x-msvideo','video/x-flv','video/x-matroska'],
-            required : true,
+            minFileSize : null,
+            maxFileSize : "1000MB",
+            required : false,
             maxFiles : 1,
             server : {
                 url : '{{route('admin.filepond')}}',
