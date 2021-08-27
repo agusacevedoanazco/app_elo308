@@ -23,6 +23,7 @@
                 <th scope="col">Asignatura</th>
                 <th scope="col">Procesado</th>
                 <th scope="col">Errores</th>
+                <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
             </tr>
@@ -47,13 +48,13 @@
                 @else
                     <td class="text-center"><i class="far fa-check-circle"></i></td>
                 @endif
+                <td class="text-center"><a href="{{ route('admin.eventos.show',$evento->id) }}" class="btn btn-primary">Ver</a></td>
                 <td class="text-center"><a href="{{ route('admin.eventos.edit',$evento->id) }}" class="btn btn-warning">Editar</a></td>
                 <td class="text-center"><form action="{{ route('admin.eventos.destroy',$evento->id) }}" method="post">
                         @csrf
                         @method('delete')
                         <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </td>
+                    </form></td>
                 </tbody>
             @endforeach
         </table>

@@ -44,9 +44,10 @@ class UploadEventoJob implements ShouldQueue
 
             if ($request->successful())
             {
-                error_log('upload success');
-                //insertart identificador de video de opencast en bd
+                error_log('Upload Successful');
+                //insertar identificador de video de opencast en bd
                 $evento->evento_oc = $request->object()->identifier;
+                error_log('Opencast event uid='.$evento->evento_oc);
 
                 //eliminar video y directorio temporal
                 Storage::disk('videos')->deleteDirectory($evento->temp_directory);
@@ -77,8 +78,7 @@ class UploadEventoJob implements ShouldQueue
         }
         catch (ModelNotFoundException $exception)
         {
-            error_log($exception->getMessage());
-            return;
+            $this->fail($exception);
         }
     }
 

@@ -13,7 +13,10 @@ class Evento extends Model
         'evento_oc',
         'titulo',
         'descripcion',
-        'publicado',
+        'temp_filename',
+        'temp_directory',
+        'autor',
+        'pendiente',
         'error',
     ];
 

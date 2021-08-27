@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Evento;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\UpdateEventoJob;
 use App\Jobs\UploadEventoJob;
 use App\Models\Asignatura;
 use App\Models\Evento;
@@ -85,7 +86,7 @@ class EventoController extends Controller
             UploadEventoJob::dispatch($evento->id);
 
             //retorna con OK en proceso
-            return back()->with('okmsg','El video ha sido enviaddo a la cola de procesamiento.');
+            return back()->with('okmsg','El video ha sido enviado a la cola de procesamiento.');
         }
     }
 
@@ -97,6 +98,26 @@ class EventoController extends Controller
      */
     public function show($id)
     {
+        try{
+            $evento = Evento::findOrFail($id);
+            $asignatura = $evento->asignatura;
+            $response = $this->getOpencastEventStatus($evento);
+
+            if($response->successful())
+            {
+                return view('admin.eventos.show')->with([
+                    'evento' => $evento,
+                    'asignatura' => $asignatura,
+                    'oc_event' => $response->body(),
+                ]);
+            }
+            else
+            {
+                return back()->with('errmsg','Error al cargar el evento');
+            }
+        }catch (ModelNotFoundException $exception){
+            return redirect()->route('admin.eventos.index');
+        }
     }
 
     /**
@@ -135,14 +156,10 @@ class EventoController extends Controller
             'evento_video' => 'nullable|json'
         ]);
 
-        $response = $this->putEventMetadata($evento->id);
 
-        dd($evento,$response,$response->effectiveUri());
-
-        /*
         //0. Confirmar que se pueden hacer cambios en el evento
-        if($evento->pendiente) return back()->with('warnmsg','No se puede actualizar el evento, hasta que los cambios pendientes no hayan terminado');
-        if($evento->error) return back()->with('errmsg','No se puede actualizar el evento, dado que cambios anteriores finalizaron con error');
+        if($evento->pendiente == true) return back()->with('warnmsg','No se puede actualizar el evento, hasta que los cambios pendientes no hayan terminado');
+        if($evento->error == true) return back()->with('errmsg','No se puede actualizar el evento, dado que cambios anteriores finalizaron con error');
         $has_file = isset($request->evento_video);
         if ($has_file) if(json_decode($request->evento_video)->error) return back()->with('errmsg','Ocurrió un error al subir el archivo, inténtelo nuevamente');
 
@@ -152,30 +169,67 @@ class EventoController extends Controller
 
         if (!isset($title) && !isset($description) && !$has_file) return back()->with('warnmsg','No hay cambios por realizar!');
 
+        //bloquea el evento para hacer los cambios hasta que estos hayan sido completados
+        $evento->pendiente = true;
+        $evento->save();
+
         //2. Realizar cambios en caso de ser unicamente para la metadata
         if(!$has_file)
         {
-            $evento->pendiente = true;
             if(isset($title)) $evento->titulo = $title;
-            if(isset($description)) $evento->titulo = $description;
+            if(isset($description)) $evento->descripcion = $description;
             $evento->save();
 
-            $response = $this->putEventMetadata($evento);
-
             //Actualizar metadata
-            //TODO
+            $response = $this->putEventMetadata($evento->id);
+
             //4. Confirmar que los cambios hayan sido realizados correctamente
+            if ($response->successful())
+            {
+                //Se realizó la actualizacion correctamente
+                $evento->pendiente = false;
+                $evento->save();
+                return back()->with('okmsg','Se ha actualizado el evento satisfactoriamente');
+            }
+            else
+            {
+                $evento->error = true;
+                $evento->save();
+                if($response->status() == 400) return back()->with('errmsg','Ocurrió un error al generar la solicitud de actualizacion en el servidor opencast');
+                elseif($response->status() == 404) return back()->with('errmsg',"El evento no se encuentra registrado en opencast");
+                elseif($response->status() == 412) return back()->with('errmsg',"El evento no se encuentra disponible para su actualización");
+                else return back()->with('errmsg',"Error en el servicio Opencast");
+            }
+            return back()->with('warnmsg','Funcionalidad en mantención');
         }
         //3. Realizar los cambios en caso de requerir la actualizacion del archivo del evento
         else
         {
+            //Set the metadata
+            if(isset($title)) $evento->titulo = $title;
+            if(isset($description)) $evento->descripcion = $description;
+
+            //Set the files
             $evento->temp_directory = json_decode($request->evento_video)->directory;
             $evento->temp_filename = json_decode($request->evento_video)->filename;
-            if ( isset($title) ) $evento->titulo = $title;
-            if ( isset($description) ) $evento->description = $description;
-            //4. Confirmar que los cambios hayan sido realizados correctamente
+            $evento->save();
+
+            //Elimina el evento asociado
+            $response = $this->deleteEventOpencast($evento);
+            if($response->successful())
+            {
+                $evento->evento_oc = null;
+                UploadEventoJob::dispatch($evento->id);
+
+                return back()->with('okmsg','El video ha sido enviado a la cola de procesamiento.');
+            }
+            else{
+                $evento->error = true;
+                $evento->save();
+                return back()->with('errormsg','Ocurrió un error al intentar eliminar el evento para su actualización, inténtelo más tarde');
+            }
+
         }
-        */
     }
 
     /**
@@ -186,22 +240,46 @@ class EventoController extends Controller
      */
     public function destroy($id)
     {
+        try{
+            //encontrar el evento a eliminar
+            $evento = Evento::findOrFail($id);
 
+            //eliminar de opencast y del registro local
+            if (isset($evento->evento_oc)) {
+                //eliminar de opencast
+                $response = $this->deleteEventOpencast($evento);
+
+                //eliminar del registro local
+                if($response->successful()) {
+                    $evento->delete();
+                    return back()->with('okmsg','Evento eliminado exitosamente');
+                }
+                else{
+                    $evento->error = true;
+                    $evento->save();
+                    return back()->with('errormsg','Ocurrió un error al eliminar el evento, inténtelo más tarde');
+                }
+            }
+            else {
+                $evento->delete();
+                return back()->with('okmsg','Evento eliminado satisfactoriamente');
+            }
+        }catch (ModelNotFoundException $e) {
+            return back()->with('errormsg','No se pudo eliminar el evento ya que no existe!');
+        }
     }
 
     /**
      * Update event metadata, doesn't modify the event files
      *
-     * @param Evento $evento Evento a modificar
+     * @param int $evento_id Evento a modificar
      */
     private function putEventMetadata(int $evento_id)
     {
         try {
             $evento = Evento::findOrFail($evento_id);
         }catch(ModelNotFoundException $e){
-            return Http::fake(Http::response([
-                "error" => "true",
-            ],404))->get('localhost');
+            return Http::fake(Http::response("",412))->get('localhost');
         }
 
         if (!$evento->pendiente || !isset($evento->evento_oc))
@@ -215,20 +293,32 @@ class EventoController extends Controller
             $uri = env('OPENCAST_URL') . '/api/events/' . $evento->evento_oc . '/metadata';
 
             $metadata = json_encode([
-                [
-                    'flavor' => 'dublincore/episode',
-                    'fields' => [
-                        ['id' => 'title', 'value' => $evento->titulo],
-                        ['id' => 'description', 'value' => $evento->descripcion],
-                    ],
-                ]
+                ['id' => 'title', 'value' => $evento->titulo],
+                ['id' => 'description', 'value' => $evento->descripcion],
             ]);
 
-            error_log($uri);
-
             return Http::withoutVerifying()->withBasicAuth(env('OPENCAST_USER' ), env('OPENCAST_PASSWORD'))
+                ->withHeaders(['Accept' => 'application/json'])
                 ->attach('metadata',$metadata)
-                ->put($uri);
+                ->put($uri . '?type=dublincore/episode');
         }
+    }
+
+    private function deleteEventOpencast(Evento $evento)
+    {
+        $uri = env('OPENCAST_URL') . '/api/events/' . $evento->evento_oc;
+
+        return Http::withoutVerifying()->withBasicAuth(env('OPENCAST_USER' ), env('OPENCAST_PASSWORD'))
+            ->withHeaders(['Accept' => 'application/json'])
+            ->delete($uri);
+    }
+
+    private function getOpencastEventStatus(Evento $evento)
+    {
+        $uri = env('OPENCAST_URL') . '/api/events/' . $evento->evento_oc;
+
+        return Http::withoutVerifying()->withBasicAuth(env('OPENCAST_USER' ), env('OPENCAST_PASSWORD'))
+            ->withHeaders(['Accept' => 'application/json'])
+            ->get($uri);
     }
 }
