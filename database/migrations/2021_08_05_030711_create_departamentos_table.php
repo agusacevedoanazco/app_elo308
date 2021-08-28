@@ -17,8 +17,7 @@ class CreateDepartamentosTable extends Migration
             $table->id();
 
             $table->string('nombre');
-            $table->string('sigla');
-            $table->string('carrera');
+            $table->string('sigla')->unique();
 
             $table->timestamps();
         });

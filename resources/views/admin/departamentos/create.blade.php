@@ -7,7 +7,7 @@
                     <div class="card p-4">
                         <div class="card-body">
                             <h1>Crear un nuevo departamento</h1>
-                            <p class="text-muted">Agrega un nuevo departamento-carrera al sistema</p>
+                            <p class="text-muted">Agrega un nuevo departamento al sistema</p>
                             @if (session()->has('okmsg'))
                                 <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
                             @endif
@@ -28,14 +28,6 @@
                                     <input class="form-control @error('sigla') border-danger @enderror" type="text" name="sigla" id="sigla" placeholder="Sigla (Ejemplo: ELO)" value="{{ old('sigla') }}">
                                 </div>
                                 @error('sigla')
-                                <div class="alert alert-danger" role="alert">
-                                    {{$message}}
-                                </div>
-                                @enderror
-                                <div class="input-group mb-4">
-                                    <input class="form-control @error('carrera') border-danger @enderror" type="text" name="carrera" id="carrera" placeholder="Carrera" value="{{ old('carrera') }}">
-                                </div>
-                                @error('carrera')
                                 <div class="alert alert-danger" role="alert">
                                     {{$message}}
                                 </div>

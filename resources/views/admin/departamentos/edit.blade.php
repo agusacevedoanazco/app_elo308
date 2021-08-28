@@ -26,14 +26,6 @@
                                     {{$message}}
                                 </div>
                                 @enderror
-                                <div class="input-group mb-4">
-                                    <input class="form-control @error('carrera') border-danger @enderror" type="text" name="carrera" id="carrera" placeholder="Carrera" value="{{ $departamento->carrera }}">
-                                </div>
-                                @error('carrera')
-                                <div class="alert alert-danger" role="alert">
-                                    {{$message}}
-                                </div>
-                                @enderror
                                 <div class="col-6">
                                     <div class="row">
                                         <button class="btn btn-primary px-4" type="submit">Actualizar Departamento</button>

@@ -19,7 +19,6 @@
             <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Departamento</th>
-                <th scope="col">Carrera</th>
                 <th scope="col">Sigla</th>
                 <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
@@ -29,7 +28,6 @@
             <tbody>
                 <th scope="row">{{$dpt->id}}</th>
                 <td>{{$dpt->nombre}}</td>
-                <td>{{$dpt->carrera}}</td>
                 <td class="font-weight-bold">{{$dpt->sigla}}</td>
                 <td class="text-center"><a href="{{ route('admin.departamentos.edit',['departamento'=>$dpt]) }}" class="btn btn-warning">Editar</a></td>
                 <td class="text-center"><form action="{{ route('admin.departamentos.destroy',['departamento'=>$dpt]) }}" method="post">

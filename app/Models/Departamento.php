@@ -12,7 +12,6 @@ class Departamento extends Model
     protected $fillable = [
         'nombre',
         'sigla',
-        'carrera',
     ];
 
     public function asignaturas()

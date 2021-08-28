@@ -44,13 +44,11 @@ class DepartamentoController extends Controller
         $this->validate($request, [
             'nombre' => 'max:255|required',
             'sigla' => 'max:3|min:3|required|unique:departamentos',
-            'carrera' => 'max:255|required',
         ]);
 
         $departamento = Departamento::create([
             'nombre' => $request->nombre,
             'sigla' => strtoupper($request->sigla),
-            'carrera' => $request->carrera,
         ]);
 
         return back()->with([
@@ -104,7 +102,6 @@ class DepartamentoController extends Controller
         try {
             $departamento = Departamento::findOrfail($id);
             $departamento->nombre = $request->nombre;
-            $departamento->carrera = $request->carrera;
             $departamento->save();
             return back()->with([
                 'okmsg' => 'El departamento ha sido actualizado con éxito!',
@@ -132,7 +129,7 @@ class DepartamentoController extends Controller
             ]);
         } catch (ModelNotFoundException $e){
             return back()->with([
-                'errormsg' => 'Error! No se pudo eliminar el departamento, ya que no se encuentra enla base de datos.'
+                'errormsg' => 'Error! No se pudo eliminar el departamento, ya que no se encuentra en la base de datos.'
             ]);
         }
     }
