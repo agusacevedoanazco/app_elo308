@@ -13,5 +13,6 @@
 <body class="bg-light">
     @yield('body')
     @yield('filepondjs')
+    @yield('scripts')
 </body>
 </html>

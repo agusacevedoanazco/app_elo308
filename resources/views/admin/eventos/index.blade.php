@@ -11,9 +11,9 @@
         <h1>Eventos</h1>
     </div>
     <div class="btn-toolbar mb-2">
-        <a href="{{ route('admin.eventos.create') }}"><button class="btn btn-primary">Nuevo evento</button></a>
+        <a href="{{ route('admin.eventos.create') }}"><button class="btn btn-success">Nuevo evento</button></a>
     </div>
-    @isset($eventos)
+    @if($eventos->count())
         <table class="table">
             <thead class="thead-dark">
             <tr>
@@ -21,8 +21,8 @@
                 <th scope="col">Opencast uid</th>
                 <th scope="col">Titulo</th>
                 <th scope="col">Asignatura</th>
-                <th scope="col">Procesado</th>
-                <th scope="col">Errores</th>
+                <th scope="col">Enviado</th>
+                <th scope="col">Estado</th>
                 <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
@@ -39,14 +39,14 @@
                 <td>{{$evento->titulo}}</td>
                 <td>{{$evento->asignatura->oc_series_name}}</td>
                 @if($evento->pendiente)
-                    <td class="text-center"><i class="far fa-hourglass"></i></td>
+                    <td class="text-center text-primary"><i class="far fa-hourglass"></i></td>
                 @else
-                    <td class="text-center"><i class="far fa-check-circle"></i></td>
+                    <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                 @endif
                 @if($evento->error)
-                    <td class="text-center"><i class="far fa-exclamation-triangle"></i></td>
+                    <td class="text-center text-danger"><i class="far fa-exclamation-triangle"></i></td>
                 @else
-                    <td class="text-center"><i class="far fa-check-circle"></i></td>
+                    <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                 @endif
                 <td class="text-center"><a href="{{ route('admin.eventos.show',$evento->id) }}" class="btn btn-primary">Ver</a></td>
                 <td class="text-center"><a href="{{ route('admin.eventos.edit',$evento->id) }}" class="btn btn-warning">Editar</a></td>
@@ -61,5 +61,5 @@
         {{ $eventos->links() }}
     @else
         <div class="alert alert-warning text-center">No se encontraron eventos en la base de datos.</div>
-    @endisset
+    @endif
 @endsection

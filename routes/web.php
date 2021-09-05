@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Departamento\DepartamentoController;
 use App\Http\Controllers\Admin\Asignatura\AsignaturaController as AdminAsignaturaController;
 use App\Http\Controllers\Admin\Evento\EventoController as AdminEventoController;
 use App\Http\Controllers\Admin\Evento\FilepondController as AdminFilepondController;
+use App\Http\Controllers\Admin\User\UserController as AdminUserController;
+use App\Http\Controllers\Admin\Asignatura\ParticipanteController as AdminAsignaturaParticipanteController;
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as UserHomeController;
@@ -28,8 +30,6 @@ use App\Http\Controllers\User\HomeController as UserHomeController;
  */
 /** Public Routes */
 Route::get('/', [HomePageController::class, 'index'])->name('index');
-
-Route::get('/test',[HomePageController::class, 'test'])->name('test');
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
@@ -46,10 +46,16 @@ Route::group(['middleware'=>'auth'], function (){
         Route::get('/home', [AdminHomeController::class, 'index'])->name('homepage');
 
         /** Departamentos Controllers */
-        Route::resource('/departamentos', DepartamentoController::class)->except(['show']);
+        Route::resource('/departamentos', DepartamentoController::class);
 
         /** Asignaturas Controllers */
-        Route::resource('/asignaturas', AdminAsignaturaController::class)->except(['show']);
+        Route::resource('/asignaturas', AdminAsignaturaController::class);
+        Route::get('/asignaturas/{id}/participantes',[AdminAsignaturaController::class,'showMembers'])->name('asignaturas.showmembers');
+
+        /** Asignaturas Participantes Controllers */
+        Route::get('/asignaturas/{id}/participantes',[AdminAsignaturaParticipanteController::class,'show'])->name('asignaturas.participantes.show');
+        Route::delete('/asignaturas/{asignatura_id}/participantes/{user_id}',[AdminAsignaturaParticipanteController::class,'destroy'])->name('asignaturas.participantes.destroy');
+        Route::post('/asignaturas/{asignatura_id}/participantes',[AdminAsignaturaParticipanteController::class,'store'])->name('asignaturas.participantes.store');
 
         /** Eventos Controllers */
         Route::resource('/eventos', AdminEventoController::class);
@@ -57,6 +63,14 @@ Route::group(['middleware'=>'auth'], function (){
         /** Upload Controllers */
         Route::post('/upload/filepond',[AdminFilepondController::class,'store'])->name('filepond');
         Route::delete('/upload/filepond',[AdminFilepondController::class,'destroy']);
+
+        /** Users Controllers */
+        Route::get('/usuarios/administradores',[AdminUserController::class,'administradores'])->name('usuarios.administradores');
+        Route::get('/usuarios/profesores',[AdminUserController::class,'profesores'])->name('usuarios.profesores');
+        Route::get('/usuarios/estudiantes',[AdminUserController::class,'estudiantes'])->name('usuarios.estudiantes');
+        Route::get('/usuarios/create/{rol?}',[AdminUserController::class,'create'])->name('usuarios.create');
+        Route::put('/usuarios/{id}/adminUpdatePassword',[AdminUserController::class,'adminUpdatePassword'])->name('usuarios.admputpwd');
+        Route::resource('/usuarios',AdminUserController::class)->except(['create']);
 
     });
 

@@ -64,7 +64,14 @@ class DepartamentoController extends Controller
      */
     public function show($id)
     {
-        //
+        try{
+            $departamento = Departamento::findOrFail($id);
+            return view('admin.departamentos.show')->with([
+                'departamento' =>  $departamento,
+            ]);
+        }catch (ModelNotFoundException $e){
+            return back()->with('errormsg','Departamento no encontrado');
+        }
     }
 
     /**

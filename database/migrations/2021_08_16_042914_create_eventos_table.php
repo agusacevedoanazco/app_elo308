@@ -21,6 +21,7 @@ class CreateEventosTable extends Migration
             $table->string('temp_filename')->nullable();
             $table->string('temp_directory')->nullable();
             $table->string('autor');
+            $table->boolean('publicado')->default(false);
             $table->boolean('pendiente')->default(false);
             $table->boolean('error')->default(false);
             $table->foreignId('id_asignatura')->constrained('asignaturas')->cascadeOnDelete();

@@ -11,17 +11,12 @@ class HomePageController extends Controller
     {
         if ( auth()->check() )
         {
-            return ( auth()->user()->isAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('app.homepage');
+            return ( auth()->user()->roleAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('app.homepage');
         }
         else
         {
             return view('index');
         }
-    }
-
-    public function test()
-    {
-        return view('test');
     }
 
     public function fallback()

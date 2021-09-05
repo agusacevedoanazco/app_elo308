@@ -29,7 +29,7 @@ class LoginController extends Controller
             return back()->with('status','Las credenciales proporcionadas no son válidas. Intente nuevamente');
         } else
         {
-            return ( auth()->user()->isAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('app.homepage');
+            return ( auth()->user()->roleAdmin() ) ? redirect()->route('admin.homepage') : redirect()->route('app.homepage');
         }
 
     }

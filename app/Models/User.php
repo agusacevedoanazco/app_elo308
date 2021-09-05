@@ -43,13 +43,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function isAdmin()
+    public function roleAdmin()
     {
         return $this->role === 0;
     }
 
-    public function matriculas()
+    public function roleProfesor()
     {
-        return $this->hasMany(Matricula::class);
+        return $this->role === 1;
+    }
+
+    public function asignaturas()
+    {
+        return $this->belongsToMany(Asignatura::class,'participantes','id_user','id_asignatura');
     }
 }

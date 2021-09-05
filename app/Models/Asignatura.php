@@ -26,6 +26,11 @@ class Asignatura extends Model
 
     public function eventos()
     {
-        return $this->hasMany(Evento::class,'id_asignatura','id');
+        return $this->hasMany(Evento::class,'id_asignatura','id')->orderByDesc('updated_at');
+    }
+
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class,'participantes','id_asignatura','id_user');
     }
 }

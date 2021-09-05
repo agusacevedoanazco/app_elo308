@@ -5,11 +5,11 @@
         <a class="navbar-brand mr-auto" href="{{ route('index') }}">Video App</a>
         <ul class="navbar-nav ml-auto">
             @auth()
-                @if(auth()->user()->isAdmin())
+                @if(auth()->user()->roleProfesor())
                 <li class="nav-item text-white form-inline border-light mr-2"><a class="btn btn-success" href=""><i class="fa fa-video mr-1"></i>Nuevo Evento</a></li>
                 @endif
                 <li class="dropdown nav-item form-inline text-white font-weight-bold border rounded pl-2">
-                    <i class="fa fa-user-circle text-white mr-2" style="font-size: 32px;"></i>{{ auth()->user()->name . ' ' . auth()->user()->last_name }}
+                    <i class="fa fa-user-circle text-white mr-2" style="font-size: 32px;"></i>{{ auth()->user()->name . ' ' . auth()->user()->last_name}}
                     <button class="ml-1 btn dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                     <div class="dropdown-menu col-12" aria-labelledby="dropdownMenuButton">
                         <a class="dropdown-item" href="{{ route('app.homepage') }}">Inicio</a>

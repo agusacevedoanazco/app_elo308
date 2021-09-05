@@ -12,7 +12,7 @@
             <h1>{{$evento->titulo}}</h1>
         </div>
         <h5 class="text-muted text-center">{{$evento->descripcion}}</h5>
-        <div class="mt-4 col-md-6 mx-auto">
+        <div class="mt-4 col-md-9 mx-auto">
             <div class="card">
                 <div class="card-header text-center bg-secondary text-white">{{$asignatura->oc_series_name}}<br><span class="font-weight-bold">{{$asignatura->nombre}}</span><br>{{$evento->titulo}}</div>
                 <div class="card-body">{{$oc_event}}</div>

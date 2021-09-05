@@ -18,7 +18,7 @@ class AdminMiddleware
     {
         //Check if user is admin
 
-        if(auth()->check() && auth()->user()->isAdmin())
+        if(auth()->check() && auth()->user()->roleAdmin())
         {
             return $next($request);
         }

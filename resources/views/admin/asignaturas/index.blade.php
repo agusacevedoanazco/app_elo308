@@ -24,6 +24,7 @@
                 <th scope="col">Semestre</th>
                 <th scope="col">Paralelo</th>
                 <th scope="col">Departamento</th>
+                <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
                 <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
             </tr>
@@ -37,6 +38,7 @@
                 <td>{{$asignatura->semestre}}</td>
                 <td>{{$asignatura->paralelo}}</td>
                 <td>{{$asignatura->departamento->nombre}}</td>
+                <td class="text-center"><a href="{{ route('admin.asignaturas.show',$asignatura) }}" class="btn btn-primary">Ver</a></td>
                 <td class="text-center"><a href="{{ route('admin.asignaturas.edit',['asignatura'=>$asignatura]) }}" class="btn btn-warning">Editar</a></td>
                 <td class="text-center"><form action="{{ route('admin.asignaturas.destroy',$asignatura) }}" method="post">
                         @csrf

@@ -103,7 +103,31 @@ class AsignaturaController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $asignatura = Asignatura::findOrFail($id);
+            return view('admin.asignaturas.show')->with([
+                'asignatura' => $asignatura,
+            ]);
+        }catch (ModelNotFoundException $e) {
+            return redirect()->route('admin.asignaturas.index');
+        }
+    }
+
+    public function showMembers($id){
+        try{
+            $asignatura = Asignatura::findOrFail($id);
+            $profesores = $asignatura->usuarios()->where('role','=',1)->get();
+            $estudiantes = $asignatura->usuarios()->where('role','=',2)->get();
+            //$profesor = null;
+            //$estudiantes = null;
+            return view('admin.asignaturas.showmembers')->with([
+                'asignatura' => $asignatura,
+                'profesores' => $profesores,
+                'estudiantes' => $estudiantes,
+            ]);
+        }catch (ModelNotFoundException $e){
+            redirect()->route('admin.asignaturas.index')->with('errormsg','Asignatura seleccionada no encontrada');
+        }
     }
 
     /**

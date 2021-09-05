@@ -113,10 +113,12 @@ class EventoController extends Controller
             }
             else
             {
-                return back()->with('errmsg','Error al cargar el evento');
+                if ($response->serverError()) return back()->with('errormsg','Hubo un error al contactar con el servidor Opencast');
+                elseif ($response->clientError()) return back()->with('errormsg','Hubo un error al encontrar el evento indicado, compruebe que s encuentra registrado en el servicio Opencast');
+                else return back()->with('errormsg','Error al cargar el evento');
             }
         }catch (ModelNotFoundException $exception){
-            return redirect()->route('admin.eventos.index');
+            return redirect()->route('admin.eventos.index')->with('errormsg','Model not found');
         }
     }
 
