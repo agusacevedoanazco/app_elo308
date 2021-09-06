@@ -101,6 +101,7 @@ class EventoController extends Controller
         try{
             $evento = Evento::findOrFail($id);
             $asignatura = $evento->asignatura;
+            $publicacion = $evento->publicacion;
             $response = $this->getOpencastEventStatus($evento);
 
             if($response->successful())
@@ -109,6 +110,7 @@ class EventoController extends Controller
                     'evento' => $evento,
                     'asignatura' => $asignatura,
                     'oc_event' => $response->body(),
+                    'publicacion' => $publicacion,
                 ]);
             }
             else

@@ -44,7 +44,7 @@
                     <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                 @endif
                 @if($evento->error)
-                    <td class="text-center text-danger"><i class="far fa-exclamation-triangle"></i></td>
+                    <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>
                 @else
                     <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                 @endif
