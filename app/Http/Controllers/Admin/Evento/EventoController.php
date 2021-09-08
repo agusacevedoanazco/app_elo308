@@ -100,6 +100,11 @@ class EventoController extends Controller
     {
         try{
             $evento = Evento::findOrFail($id);
+
+            if($evento->pendiente || $evento->evento_oc == null){
+                return redirect()->route('admin.eventos.index')->with('warnmsg','El evento seleccionado aún no ha sido despachado al sistema de procesamiento de videos');
+            }
+
             $asignatura = $evento->asignatura;
             $publicacion = $evento->publicacion;
             $response = $this->getOpencastEventStatus($evento);
@@ -120,7 +125,7 @@ class EventoController extends Controller
                 else return back()->with('errormsg','Error al cargar el evento');
             }
         }catch (ModelNotFoundException $exception){
-            return redirect()->route('admin.eventos.index')->with('errormsg','Model not found');
+            return redirect()->route('admin.eventos.index')->with('errormsg','Evento no existente');
         }
     }
 

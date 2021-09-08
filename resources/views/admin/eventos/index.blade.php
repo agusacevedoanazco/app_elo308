@@ -1,15 +1,20 @@
 @extends('layout.admin2')
 
 @section('content')
+    <div class="display-4 text-center">
+        <h1>Eventos</h1>
+    </div>
+
     @if (session()->has('okmsg'))
         <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
     @endif
     @if (session()->has('errormsg'))
         <div class="alert alert-danger text-center">{{ session('errormsg') }}</div>
     @endif
-    <div class="display-4 text-center">
-        <h1>Eventos</h1>
-    </div>
+    @if (session()->has('warnmsg'))
+        <div class="alert alert-warning text-center">{{ session('warnmsg') }}</div>
+    @endif
+
     <div class="btn-toolbar mb-2">
         <a href="{{ route('admin.eventos.create') }}"><button class="btn btn-success">Nuevo evento</button></a>
     </div>

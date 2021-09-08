@@ -89,6 +89,7 @@ class UploadEventoJob implements ShouldQueue
             ['allow'=>true,'action'=>'read','role'=>'ROLE_ADMIN'],
             ['allow'=>true,'action'=>'read','role'=>env('OPENCAST_ROLE_USER')],
             ['allow'=>true,'action'=>'write','role'=>env('OPENCAST_ROLE_USER')],
+            ['allow'=>true,'action'=>'read','role'=>'ROLE_ANONYMOUS'],
         ]);
 
         $metadata = json_encode([

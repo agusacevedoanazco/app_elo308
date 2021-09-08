@@ -22,6 +22,7 @@ class CreatePublicacionesTable extends Migration
             $table->string('720p-quality_url');
             $table->string('1080p-quality_url')->nullable();
             $table->string('2160p-quality_url')->nullable();
+            $table->string('mediatype');
 
             $table->foreignId('id_evento')->constrained('eventos')->cascadeOnDelete();
 

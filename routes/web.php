@@ -21,6 +21,9 @@ use App\Http\Controllers\Admin\Asignatura\ParticipanteController as AdminAsignat
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as UserHomeController;
+use App\Http\Controllers\User\Asignatura\AsignaturaController as AppAsignaturaController;
+use App\Http\Controllers\User\Evento\EventoController as AppEventoController;
+use App\Http\Controllers\User\PerfilController;
 
 /**
  * Se definen las rutas de la aplicacion.
@@ -77,6 +80,17 @@ Route::group(['middleware'=>'auth'], function (){
     /** User Routes */
     Route::group(['prefix' => 'app', 'as' => 'app.', 'middleware' => 'user'], function(){
         Route::get('/home', [UserHomeController::class, 'index'])->name('homepage');
+
+        Route::resource('/asignaturas',AppAsignaturaController::class)->only(['show','index']);
+
+        Route::get('/eventos/create/{id?}',[AppEventoController::class,'create'])->name('eventos.create');
+        Route::resource('/eventos',AppEventoController::class)->except(['index','create']);
+
+        Route::post('/upload/filepond',[AdminFilepondController::class,'store'])->name('filepond');
+        Route::delete('/upload/filepond',[AdminFilepondController::class,'destroy']);
+
+        Route::get('/myprofile',[PerfilController::class, 'index'])->name('perfil.index');
+        Route::put('/myprofile/update/{id}/password',[PerfilController::class,'updatePassword'])->name('perfil.update.password');
     });
 });
 

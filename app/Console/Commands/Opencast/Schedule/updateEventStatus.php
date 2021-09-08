@@ -15,7 +15,7 @@ class updateEventStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'opencast:updateEventStatus';
+    protected $signature = 'opencast:updateEE';
 
     /**
      * The console command description.
@@ -41,6 +41,7 @@ class updateEventStatus extends Command
      */
     public function handle()
     {
+        $this->info(now()->toDateTimeString() . ' | INFO | Actualizando el estado de publicación de los eventos pendientes.');
         try {
             $eventos = Evento::where('pendiente', false)
                 ->whereDoesntHave('publicacion')
@@ -66,7 +67,10 @@ class updateEventStatus extends Command
                             $publicacion->oc_publication_id = $ocid;
 
                             foreach ($media as $video){
-                                if($video->tags[0] == '360p-quality') $publicacion['360p-quality_url'] = $video->url;
+                                if($video->tags[0] == '360p-quality'){
+                                    $publicacion['360p-quality_url'] = $video->url;
+                                    $publicacion->mediatype = $video->mediatype;
+                                }
                                 elseif($video->tags[0] == '480p-quality') $publicacion['480p-quality_url'] = $video->url;
                                 elseif($video->tags[0] == '720p-quality') $publicacion['720p-quality_url'] = $video->url;
                                 elseif($video->tags[0] == '1080p-quality') $publicacion['1080p-quality_url'] = $video->url;
@@ -80,17 +84,23 @@ class updateEventStatus extends Command
                             $evento->save();
                         }
                     }
+                    elseif ($response->object()->status == "EVENTS.EVENTS.STATUS.PROCESSING"){
+                        $this->info(now()->toDateTimeString() . ' | INFO | '.'El evento id = ' . $evento->id . '. De oc_uid = ' . $evento->evento_oc . ' aún se encuentra en proceso de publicación...');
+                    }
                 }
                 else{
                     if($response->clientError()){
+                        $evento->error = true;
+                        $this->info(now()->toDateTimeString() . ' | ERROR | '.'El evento id = ' . $evento->id . '. De oc_uid = ' . $evento->evento_oc . ' no existe en el servicio Opencast!');
                         $this->info($response->getState());
                     }
                     else{
-                        $this->info('Hubo un error al contactar con el servidor, finalizando ejecución');
+                        $this->info(now()->toDateTimeString() . ' | ERROR | El proceso de actualización de estado de publicación de eventos ha finalizado con errores, dado que no se pudo contactar el servicio Opencast.');
                         return -1;
                     }
                 }
             }
+            $this->info(now()->toDateTimeString() . ' | INFO | El proceso de actualización de estado de publicación de eventos ha finalizado exitosamente.');
             return 0;
         } catch (ModelNotFoundException $e) {
             error_log($e->getMessage());
