@@ -82,6 +82,7 @@
                                 <thead class="thead-dark">
                                 <tr>
                                     <th scope="col">Titulo</th>
+                                    <th scope="col">Fecha</th>
                                     <th scope="col">Publicado</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
@@ -93,10 +94,11 @@
                                 @foreach($eventos as $evento)
                                     <tr>
                                     <td>{{$evento->titulo}}</td>
+                                    <td>{{$evento->created_at->format('d-m-y')}}</td>
                                     @if($evento->publicado)
                                         <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                     @else
-                                        <td class="text-center text-warning"><i class=" far fa-hourglass"></i></td>
+                                        <td class="text-center text-primary"><i class=" far fa-hourglass"></i></td>
                                     @endif
                                     @if($evento->error)
                                         <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>
@@ -115,7 +117,7 @@
                                 </tbody>
                             </table>
                         @else
-                            <div class="alert alert-warning text-center">No se encontraron asociados a la asignatura.</div>
+                            <div class="alert alert-warning text-center">No se encontraron eventos asociados a la asignatura.</div>
                         @endif
                     </div>
                 </div>

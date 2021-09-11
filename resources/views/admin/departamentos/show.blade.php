@@ -24,6 +24,7 @@
             </thead>
             <tbody>
                 @foreach($departamento->asignaturas as $asignatura)
+                    <tr>
                     <th scope="row">{{$asignatura->nombre}}</th>
                     <td>{{$asignatura->oc_series_name}}</td>
                     <td>{{$asignatura->anio}}</td>
@@ -37,6 +38,7 @@
                             <button type="submit" class="btn btn-danger">Eliminar</button>
                         </form>
                     </td>
+                    </tr>
                 @endforeach
             </tbody>
         </table>

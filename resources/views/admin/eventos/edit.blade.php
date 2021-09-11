@@ -11,7 +11,7 @@
             <div class="card-group">
                 <div class="card p-4">
                     <div class="card-body">
-                        <h1>Crear un Evento</h1>
+                        <h1>Editar el evento</h1>
                         <p class="text-muted">Actualiza el nombre, descripcion o publicacion del evento seleccionado</p>
                         @if (session()->has('okmsg'))
                             <div class="alert alert-success text-center">{{ session('okmsg') }}</div>
