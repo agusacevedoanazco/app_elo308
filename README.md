@@ -61,6 +61,14 @@ wget -O composer-setup.php https://getcomposer.org/installer
 sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
 ```
 
+#### Comprobar la instalación (opcional)
+
+Se puede comprobar la instalación de composer ejecutando la instrucción a continuación
+
+```bash
+composer --version
+```
+
 ### Instalación del gestor de paquetes NPM
 
 Para la capa de presentación de la aplicación, se usan dependencias de nodejs, instaladas mediante el gestor de dependencias npm, su instalación es mandatoria
@@ -69,6 +77,14 @@ Para la capa de presentación de la aplicación, se usan dependencias de nodejs,
 wget https://nodejs.org/dist/v14.17.6/node-v14.17.6-linux-x64.tar.xz
 tar xf node-v14.17.6-linux-x64.tar.xz
 sudo cp -r node-v14.17.6-linux-x64/* /usr/local/
+```
+
+#### Comprobar la instalación (opcional)
+
+Se puede comprobar la instalación de composer ejecutando la instrucción a continuación
+
+```bash
+npm -v
 ```
 
 ### Instalación de  paquetes de aplicación
@@ -105,7 +121,7 @@ En el archivo ambiente, existen las variables de ambientes asociadas a la config
 ```bash
 APP_NAME=<nombre_de_la_aplicacion>
 #Ambiente donde se despliega la aplicacion
-APP_ENV=<local|dev|prod>
+APP_ENV=local
 #Clave de encriptación de la aplicación, se configura más adelante
 APP_KEY=<clave>
 #Bandera de verbose
@@ -155,10 +171,68 @@ OPENCAST_URL="https://opencast.europa.lan"
 OPENCAST_USER="opencast_api"
 #contraseña del usuario externo
 OPENCAST_PASSWORD="api_password"
+#rol del usuario (al generar el usuario, se crea un rol del tipo ROLE_<username>)
+OPENCAST_ROLE_USER="ROLE_USER_API_EXTERNA"
+```
+
+#### Modificación de directivas
+
+La aplicación require la modificiación de las directivas php, en el archivo php.ini, de modo de permitir la ingesta de archivos. Por defecto, el servidor backend de Opencast acepta archivos de un tamaño máximo de 1GB, por lo cuál se configurará de la misma forma para la aplicación
+
+```bash
+upload_max_filesize=1024MB
+post_max_size=0
 ```
 
 ## Preparación de la base de datos
 
-Antes de desplegar la aplicación, desplegar la base de datos, generar los esquemas de la base de datos.
+### Despliegue de la base de datos
+
+```bash
+docker-compose up -d
+```
+
+### Configurar la base de datos en el archivo .env
+
+```bash
+#obtener la direccion del contenedor
+docker inspect app_db
+```
+
+### Migrar esquemas de aplicación
+
+```bash
+#en el directorio raíz de la aplicación
+php artisan migrate
+```
+
+#### (Opcional) Poblar con usuarios iniciales
+
+Genera tres usuarios con los roles de la aplicación: administrador (admin@email.com), profesor (profesor@email.com) y estudiante (estudiante@email.com)
+
+```bash
+#en el directorio raíz de la aplicación
+php artisan db:seed
+```
+
+## Preparación de la aplicación
+
+### Generar la llave de seguridad de la aplicación
+
+Generar la llave de seguridad de la aplicación
+
+```bash
+php artisan key:generate
+```
+
+## Despliegue de la aplicación
+
+### Opción 1: Auto-host mediante servidor integrado
+
+```
+php artisan serve --host <direccion-ip-servidor> --port <puerto>
+```
+
+### Opción 2: Agregar al proxy reverso
 
 //TODO
