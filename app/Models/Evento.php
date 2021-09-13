@@ -25,6 +25,11 @@ class Evento extends Model
         return $this->belongsTo(Asignatura::class,'id_asignatura','id');
     }
 
+    public function curso()
+    {
+        return $this->belongsTo(Curso::class,'id_curso','id');
+    }
+
     public function publicacion()
     {
         return $this->hasOne(Publicacion::class,'id_evento','id');
