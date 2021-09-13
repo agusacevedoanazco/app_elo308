@@ -3,18 +3,18 @@ version: "3"
 services:
     database:
         image: mariadb
-        container_name: "appdb"
+        container_name: "app_db"
         environment:
-            MYSQL_ROOT_PASSWORD: "laravel_db"
-            MYSQL_DATABASE: "laravel_db"
-            MYSQL_USER: "jupiter"
-            MYSQL_PASSWORD: "thebe"
+            MYSQL_ROOT_PASSWORD: "root_password"
+            MYSQL_DATABASE: "app_database"
+            MYSQL_USER: "database_user"
+            MYSQL_PASSWORD: "user_password"
         networks:
             - services
 
     dbadmin:
         image: phpmyadmin
-        container_name: "admindb"
+        container_name: "app_admindb"
         depends_on:
             - database
         environment:
