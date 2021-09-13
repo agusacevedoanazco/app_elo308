@@ -25,6 +25,7 @@ class CreateEventosTable extends Migration
             $table->boolean('pendiente')->default(false);
             $table->boolean('error')->default(false);
             $table->foreignId('id_asignatura')->constrained('asignaturas')->cascadeOnDelete();
+            $table->foreignId('id_curso')->constrained('cursos')->cascadeOnDelete();
             $table->timestamps();
         });
     }
