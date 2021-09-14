@@ -37,9 +37,20 @@
                         <div class="jumbotron shadow">
                             <h4 class="text-center mb">{{$evento->titulo}}</h4>
                             <h5 class="text-center text-muted">{{$evento->descripcion}}</h5>
-                            <h6 class="text-center mb-2">{{$evento->autor}}</h6>
+                            <h6 class="text-center mb-4">{{$evento->autor}}</h6>
                             <h6 class="text-center text-muted"><b>Fecha de subida: </b>{{$evento->created_at->format('d/m/y')}}</h6>
-                            <h6 class="text-center text-muted"><b>Última edición: </b>{{$evento->updated_at->format('d/m/y')}}</h6>
+                            <h6 class="text-center text-muted mb-4"><b>Última edición: </b>{{$evento->updated_at->format('d/m/y')}}</h6>
+                            @if($evento->publicado)
+                                <h6 class="text-center text-success mb-4"><b>Publicado</b></h6>
+                            @else
+                                <h6 class="text-center text-secondary"><b>En proceso</b></h6>
+                            @endif
+                            @if($evento->pendiente)
+                                <h6 class="text-center text-secondary"><b>En cola</b></h6>
+                            @endif
+                            @if($evento->error)
+                                <h6 class="text-center text-danger"><b>Error!</b></h6>
+                            @endif
                         </div>
                     </div>
                     @isset($publicacion)

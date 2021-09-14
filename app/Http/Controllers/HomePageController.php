@@ -15,7 +15,7 @@ class HomePageController extends Controller
         }
         else
         {
-            return view('index');
+            return redirect()->route('login');
         }
     }
 

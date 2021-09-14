@@ -12,7 +12,7 @@
                     <div class="nav nav-pills nav-fill nav-justified card-header-pills" id="nav-tab" role="tablist">
                         <a class="nav-link active" id="nav-eventos-tab" data-toggle="tab" href="#nav-eventos" role="tab" aria-controls="nav-eventos" aria-selected="true">Eventos</a>
                         <a class="nav-link" id="nav-participantes-tab" data-toggle="tab" href="#nav-participantes" role="tab" aria-controls="nav-participantes" aria-selected="false">Participantes</a>
-                        <a class="nav-link" id="nav-listado-tab" data-toggle="tab" href="#nav-listado" role="tab" aria-controls="nav-listado" aria-selected="false">Listado</a>
+                        <a class="nav-link" id="nav-listado-tab" data-toggle="tab" href="#nav-listado" role="tab" aria-controls="nav-listado" aria-selected="false">Editar Eventos</a>
                         <a href="{{route('app.eventos.create',$asignatura->id)}}" class="nav-link text-white bg-success"><i class="fa fa-video mr-2 align-middle"></i>Agregar Evento</a>
                     </div>
                 </nav>
@@ -84,6 +84,7 @@
                                     <th scope="col">Titulo</th>
                                     <th scope="col">Fecha</th>
                                     <th scope="col">Publicado</th>
+                                    <th scope="col">Enviado</th>
                                     <th scope="col">Estado</th>
                                     <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
                                     <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
@@ -99,6 +100,11 @@
                                         <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                     @else
                                         <td class="text-center text-primary"><i class=" far fa-hourglass"></i></td>
+                                    @endif
+                                    @if($evento->pendiente)
+                                        <td class="text-center text-primary"><i class=" far fa-hourglass"></i></td>
+                                    @else
+                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
                                     @endif
                                     @if($evento->error)
                                         <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>

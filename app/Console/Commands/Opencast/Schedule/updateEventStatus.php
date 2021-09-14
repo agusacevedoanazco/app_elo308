@@ -15,7 +15,7 @@ class updateEventStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'opencast:updateEE';
+    protected $signature = 'opencast:update';
 
     /**
      * The console command description.

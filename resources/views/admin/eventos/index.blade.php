@@ -26,6 +26,7 @@
                 <th scope="col">Opencast uid</th>
                 <th scope="col">Titulo</th>
                 <th scope="col">Asignatura</th>
+                <th scope="col">Publicado</th>
                 <th scope="col">Enviado</th>
                 <th scope="col">Estado</th>
                 <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
@@ -33,8 +34,9 @@
                 <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
             </tr>
             </thead>
-            @foreach($eventos as $evento)
-                <tbody>
+            <tbody>
+                @foreach($eventos as $evento)
+                <tr>
                 <th scope="row">{{$evento->id}}</th>
                 @isset($evento->evento_oc)
                     <td>{{$evento->evento_oc}}</td>
@@ -43,6 +45,11 @@
                 @endisset
                 <td>{{$evento->titulo}}</td>
                 <td>{{$evento->asignatura->oc_series_name}}</td>
+                @if($evento->publicado)
+                    <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                @else
+                    <td class="text-center text-primary"><i class="far fa-hourglass"></i></td>
+                @endif
                 @if($evento->pendiente)
                     <td class="text-center text-primary"><i class="far fa-hourglass"></i></td>
                 @else
@@ -60,8 +67,9 @@
                         @method('delete')
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form></td>
-                </tbody>
-            @endforeach
+                </tr>
+                @endforeach
+            </tbody>
         </table>
         {{ $eventos->links() }}
     @else

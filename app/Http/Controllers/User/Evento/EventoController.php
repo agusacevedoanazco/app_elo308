@@ -78,7 +78,7 @@ class EventoController extends Controller
             UploadEventoJob::dispatch($evento->id);
 
             //retorna con OK en proceso
-            return back()->with('okmsg','El video fue enviado correctamente a la cola de procesamiento, para su posterior publicación');
+            return back()->with('okmsg','El video fue enviado a la cola de procesamiento, para su posterior publicación');
         }
     }
 
@@ -201,7 +201,13 @@ class EventoController extends Controller
             $response = $this->deleteEventOpencast($evento);
             if($response->successful())
             {
+                //eliminar la publicacion asociada
+                if (isset($evento->publicacion)) $evento->publicacion()->delete();
                 $evento->evento_oc = null;
+                $evento->publicado = false;
+                $evento->pendiente = true;
+                $evento->error = false;
+                $evento->save();
                 UploadEventoJob::dispatch($evento->id);
 
                 return back()->with('okmsg','El video ha sido enviado a la cola de procesamiento.');
@@ -209,7 +215,7 @@ class EventoController extends Controller
             else{
                 $evento->error = true;
                 $evento->save();
-                return back()->with('errormsg','Ocurrió un error al intentar eliminar el evento para su actualización, inténtelo más tarde');
+                return back()->with('errormsg','Ocurrió un error al intentar eliminar el evento para su actualización, compruebe el estado del servidor Opencast');
             }
 
         }
