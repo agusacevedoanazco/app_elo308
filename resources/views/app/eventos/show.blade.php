@@ -1,10 +1,10 @@
 @extends('layout.app2')
 
 @section('content')
-    @isset($asignatura,$evento)
+    @isset($curso,$evento)
         <div class="text-center mb-4">
             <h1>{{$evento->titulo}}</h1>
-            <h5 class="text-muted">{{$asignatura->nombre}} - {{$asignatura->codigo}} ({{$asignatura->anio . 'S' . $asignatura->semestre}})</h5>
+            <h5 class="text-muted">{{$curso->nombre}} - {{$curso->codigo}} ({{$curso->anio . 'S' . $curso->semestre}})</h5>
         </div>
         @if($evento->publicado == false)
             <div class="alert alert-warning text-center">El evento aún no ha sido publicado, consulte más tarde...</div>

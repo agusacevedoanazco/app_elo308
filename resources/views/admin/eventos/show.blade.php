@@ -1,10 +1,10 @@
 @extends('layout.admin2')
 
 @section('content')
-    @isset($asignatura,$evento,$oc_event)
+    @isset($curso,$evento,$oc_event)
         <div class="text-center mb-4">
             <h1>{{$evento->titulo}}</h1>
-            <h5 class="text-muted">{{$asignatura->nombre}} - {{$asignatura->oc_series_name}}</h5>
+            <h5 class="text-muted">{{$curso->nombre}} - {{$curso->oc_series_name}}</h5>
         </div>
         <div class="card">
             <div class="card-header">
@@ -84,6 +84,6 @@
             document.getElementById('cardbody').textContent = JSON.stringify(data,undefined,2);
         </script>
     @else
-        <div class="alert alert-danger text-center">No se pudo cargar la asignatura!</div>
+        <div class="alert alert-danger text-center">No se pudo cargar los contenidos del Evento!</div>
     @endisset
 @endsection

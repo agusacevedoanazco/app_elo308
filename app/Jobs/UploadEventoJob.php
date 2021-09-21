@@ -61,14 +61,20 @@ class UploadEventoJob implements ShouldQueue
             }
             elseif ($request->clientError())
             {
+                $evento->error = true;
+                $evento->save();
                 error_log('client error');
             }
             elseif ($request->serverError())
             {
+                $evento->error = true;
+                $evento->save();
                 error_log('server error');
             }
             else
             {
+                $evento->error = true;
+                $evento->save();
                 error_log('unknown error');
             }
             //error_log('Id evento: '.$evento->id);
@@ -98,7 +104,7 @@ class UploadEventoJob implements ShouldQueue
                 'fields' => [
                     ['id' => 'title', 'value' => $evento->titulo],
                     ['id' => 'description', 'value' => $evento->descripcion],
-                    ['id' => 'isPartOf', 'value' => $evento->asignatura->oc_series_id],
+                    ['id' => 'isPartOf', 'value' => $evento->curso->oc_series_id],
                     ['id' => 'creator', 'value' => [$evento->autor] ],
                 ],
             ]

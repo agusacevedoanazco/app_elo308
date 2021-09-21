@@ -17,8 +17,8 @@
             </div>
             <div class="col-md-3">
                 <div class="card text-center m-2">
-                    <h6 class="mt-2 mb-4">Total de Asignaturas</h6>
-                    <h4 class="mb-2"><i class="fa fa-graduation-cap mr-4"></i>{{ $total_asignaturas }}</h4>
+                    <h6 class="mt-2 mb-4">Total de Cursos</h6>
+                    <h4 class="mb-2"><i class="fa fa-graduation-cap mr-4"></i>{{ $total_cursos }}</h4>
                 </div>
             </div>
             <div class="col-md-3">

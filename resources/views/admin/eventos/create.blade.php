@@ -43,16 +43,16 @@
                             @enderror
 
                             <div class="input-group mb-3">
-                                <select class="form-control" name="asignatura" id="asignatura">
-                                    <option value="{{ null }}" selected>Seleccione la asignatura</option>
-                                    @isset($asignaturas)
-                                        @foreach($asignaturas as $asignatura)
-                                            <option value="{{ $asignatura->id }}">{{$asignatura->oc_series_name}}</option>
+                                <select class="form-control" name="curso" id="curso">
+                                    <option value="{{ null }}" selected>Seleccione el curso</option>
+                                    @isset($cursos)
+                                        @foreach($cursos as $curso)
+                                            <option value="{{ $curso->id }}">{{$curso->oc_series_name}}</option>
                                         @endforeach
                                     @endisset
                                 </select>
                             </div>
-                            @error('asignatura')
+                            @error('curso')
                             <div class="alert alert-danger" role="alert">
                                 {{$message}}
                             </div>

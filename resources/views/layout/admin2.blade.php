@@ -40,9 +40,9 @@
                     <li class="ml-2 nav-item "><a class="nav-link @if(Request::route()->getName() == "admin.departamentos.index") active text-white @else text-dark @endif" href="{{ route('admin.departamentos.index') }}">Todos</a></li>
                 </ul>
                 <ul class="nav nav-pills flex-column mb-3 border-bottom">
-                    <li class="nav-item mb-1 container"><i class="fa fa-graduation-cap mr-2"></i>ASIGNATURAS</li>
-                    <li class="ml-2 nav-item "><a class="nav-link text-white @if(Request::route()->getName() == "admin.asignaturas.create") active @else bg-success @endif" href="{{ route('admin.asignaturas.create') }}"><i class="fa fa-plus mr-2"></i>Agregar</a></li>
-                    <li class="ml-2 nav-item "><a class="nav-link @if(Request::route()->getName() == "admin.asignaturas.index") active text-white @else text-dark @endif" href="{{ route('admin.asignaturas.index') }}">Todas</a></li>
+                    <li class="nav-item mb-1 container"><i class="fa fa-graduation-cap mr-2"></i>CURSOS</li>
+                    <li class="ml-2 nav-item "><a class="nav-link text-white @if(Request::route()->getName() == "admin.cursos.create") active @else bg-success @endif" href="{{ route('admin.cursos.create') }}"><i class="fa fa-plus mr-2"></i>Agregar</a></li>
+                    <li class="ml-2 nav-item "><a class="nav-link @if(Request::route()->getName() == "admin.cursos.index") active text-white @else text-dark @endif" href="{{ route('admin.cursos.index') }}">Todos</a></li>
                 </ul>
                 <ul class="nav nav-pills flex-column mb-3 border-bottom">
                     <li class="nav-item mb-1 container"><i class="fab fa-elementor mr-2"></i>EVENTOS</li>

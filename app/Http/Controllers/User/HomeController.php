@@ -10,9 +10,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $asignaturas = auth()->user()->asignaturas()->where('anio',now()->year)->orderByDesc('nombre')->get();
+        $cursos = auth()->user()->cursos()->where('anio',now()->year)->orderByDesc('nombre')->get();
         return view('app.home')->with([
-            'asignaturas' => $asignaturas,
+            'cursos' => $cursos,
         ]);
     }
 }
