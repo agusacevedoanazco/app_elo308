@@ -16,7 +16,7 @@ class CreateParticipantesTable extends Migration
         Schema::create('participantes', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('id_asignatura')->constrained('asignaturas')->cascadeOnDelete();
+            $table->foreignId('id_curso')->constrained('cursos')->cascadeOnDelete();
             $table->foreignId('id_user')->constrained('users')->cascadeOnDelete();
         });
     }

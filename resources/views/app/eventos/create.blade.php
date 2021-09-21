@@ -42,25 +42,25 @@
                             </div>
                             @enderror
 
-                            @isset($asignatura)
+                            @isset($curso)
                                 <div class="input-group mb-3">
-                                    <select class="form-control" name="mock-asignatura" id="mock-asignatura">
-                                        <option value="{{ $asignatura->id }}" selected disabled>{{$asignatura->oc_series_name}}</option>
+                                    <select class="form-control" name="curso-mock" id="curso-mock">
+                                        <option value="{{ $curso->id }}" selected disabled>{{$curso->oc_series_name}}</option>
                                     </select>
                                 </div>
-                                <input type="hidden" name="asignatura" id="asignatura" value="{{$asignatura->id}}">
+                                <input type="hidden" name="curso" id="curso" value="{{ $curso->id }}">
                             @endisset
-                            @isset($asignaturas)
+                            @isset($cursos)
                                 <div class="input-group mb-3">
-                                    <select class="form-control" name="asignatura" id="asignatura">
-                                        <option value="{{ null }}" selected>Seleccione la asignatura</option>
-                                        @foreach($asignaturas as $asignatura)
-                                            <option value="{{ $asignatura->id }}">{{$asignatura->oc_series_name}}</option>
+                                    <select class="form-control" name="curso" id="curso">
+                                        <option value="{{ null }}" selected>Seleccione el curso</option>
+                                        @foreach($cursos as $curso)
+                                            <option value="{{ $curso->id }}">{{$curso->oc_series_name}}</option>
                                         @endforeach
                                     </select>
                                 </div>
                             @endisset
-                            @error('asignatura')
+                            @error('curso')
                             <div class="alert alert-danger" role="alert">
                                 {{$message}}
                             </div>

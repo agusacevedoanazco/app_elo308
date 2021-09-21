@@ -14,8 +14,8 @@ class Departamento extends Model
         'sigla',
     ];
 
-    public function asignaturas()
+    public function cursos()
     {
-        return $this->hasMany(Asignatura::class, 'id_departamento','id');
+        return $this->hasMany(Curso::class,'id_departamento','id');
     }
 }

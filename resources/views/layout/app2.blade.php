@@ -34,11 +34,11 @@
             @auth()
             <div class="col-3 bg-light border-right">
                 <ul class="nav nav-pills flex-column mb-3 border-bottom">
-                    <li class="nav-item mb-1 container"><i class="fa fa-graduation-cap mr-2"></i>MIS ASIGNATURAS</li>
-                    @foreach(auth()->user()->asignaturas()->where('anio',now()->year)->orderByDesc('created_at')->get() as $asignatura)
-                        <li class="ml-2 nav-item "><a class="nav-link @if(Request::is('app/asignaturas/'.$asignatura->id)) active text-white @else text-dark @endif" href="{{route('app.asignaturas.show',$asignatura->id)}}">{{$asignatura->nombre . ' (' . $asignatura->anio . 'S' . $asignatura->semestre . ')'}}</a></li>
+                    <li class="nav-item mb-1 container"><i class="fa fa-graduation-cap mr-2"></i>MIS CURSOS</li>
+                    @foreach(auth()->user()->cursos()->where('anio',now()->year)->orderByDesc('created_at')->get() as $curso)
+                        <li class="ml-2 nav-item "><a class="nav-link @if(Request::is('app/cursos/'.$curso->id)) active text-white @else text-dark @endif" href="{{route('app.cursos.show',$curso->id)}}">{{$curso->nombre . ' (' . $curso->anio . 'S' . $curso->semestre . ')'}}</a></li>
                     @endforeach
-                    <li class="ml-2 nav-item "><a class="nav-link @if(Request::route()->getName() == "app.asignaturas.index") active text-white @else text-dark @endif" href="{{route('app.asignaturas.index')}}">Todas</a></li>
+                    <li class="ml-2 nav-item "><a class="nav-link @if(Request::route()->getName() == "app.cursos.index") active text-white @else text-dark @endif" href="{{route('app.cursos.index')}}">Todos (Histórico)</a></li>
                 </ul>
             </div>
             <!-- Content --->

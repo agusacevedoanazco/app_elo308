@@ -53,8 +53,8 @@ class User extends Authenticatable
         return $this->role === 1;
     }
 
-    public function asignaturas()
+    public function cursos()
     {
-        return $this->belongsToMany(Asignatura::class,'participantes','id_user','id_asignatura');
+        return $this->belongsToMany(Curso::class,'participantes','id_user','id_curso');
     }
 }

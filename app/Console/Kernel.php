@@ -25,7 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('opencast:update')->everyTenMinutes()->withoutOverlapping();
+        $schedule->command('opencast:update')
+            ->everyFiveMinutes()
+            ->withoutOverlapping()
+            ->appendOutputTo(storage_path('logs/schedule.log'));
     }
 
     /**

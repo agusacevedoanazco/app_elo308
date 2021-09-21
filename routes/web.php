@@ -14,13 +14,16 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Departamento\DepartamentoController;
 use App\Http\Controllers\Admin\Asignatura\AsignaturaController as AdminAsignaturaController;
+use App\Http\Controllers\Admin\Curso\CursoController as AdminCursoController;
+use App\Http\Controllers\Admin\Curso\ParticipanteController as AdminCursoParticipanteController;
 use App\Http\Controllers\Admin\Evento\EventoController as AdminEventoController;
 use App\Http\Controllers\Admin\Evento\FilepondController as AdminFilepondController;
 use App\Http\Controllers\Admin\User\UserController as AdminUserController;
 use App\Http\Controllers\Admin\Asignatura\ParticipanteController as AdminAsignaturaParticipanteController;
 
 /** User Controllers */
-use App\Http\Controllers\User\HomeController as UserHomeController;
+use App\Http\Controllers\User\HomeController as AppHomeController;
+use App\Http\Controllers\User\Curso\CursoController as AppCursoController;
 use App\Http\Controllers\User\Asignatura\AsignaturaController as AppAsignaturaController;
 use App\Http\Controllers\User\Evento\EventoController as AppEventoController;
 use App\Http\Controllers\User\PerfilController;
@@ -51,6 +54,14 @@ Route::group(['middleware'=>'auth'], function (){
         /** Departamentos Controllers */
         Route::resource('/departamentos', DepartamentoController::class);
 
+        /** Cursos Controllers */
+        Route::resource('/cursos',AdminCursoController::class);
+
+        /** Participantes Controllers */
+        Route::get('/cursos/{id}/participantes',[AdminCursoParticipanteController::class,'index'])->name('cursos.participantes.index');
+        Route::post('/cursos/{curso_id}/participantes',[AdminCursoParticipanteController::class,'store'])->name('cursos.participantes.store');
+        Route::delete('/cursos/{curso_id}/participantes/{user_id}',[AdminCursoParticipanteController::class,'destroy'])->name('cursos.participantes.destroy');
+
         /** Asignaturas Controllers */
         Route::resource('/asignaturas', AdminAsignaturaController::class);
         Route::get('/asignaturas/{id}/participantes',[AdminAsignaturaController::class,'showMembers'])->name('asignaturas.showmembers');
@@ -79,7 +90,9 @@ Route::group(['middleware'=>'auth'], function (){
 
     /** User Routes */
     Route::group(['prefix' => 'app', 'as' => 'app.', 'middleware' => 'user'], function(){
-        Route::get('/home', [UserHomeController::class, 'index'])->name('homepage');
+        Route::get('/home', [AppHomeController::class, 'index'])->name('homepage');
+
+        Route::resource('/cursos',AppCursoController::class)->only(['show','index']);
 
         Route::resource('/asignaturas',AppAsignaturaController::class)->only(['show','index']);
 

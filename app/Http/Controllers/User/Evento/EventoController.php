@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User\Evento;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\UploadEventoJob;
-use App\Models\Asignatura;
+use App\Models\Curso;
 use App\Models\Evento;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -21,18 +21,18 @@ class EventoController extends Controller
     {
         if (isset($id)){
             try{
-                $asignatura = Asignatura::findOrFail($id);
+                $curso = Curso::findOrFail($id);
                 return view('app.eventos.create')->with([
-                    'asignatura' => $asignatura,
+                    'curso' => $curso,
                 ]);
             }catch(ModelNotFoundException $e){
-                return redirect()->route('app.asignaturas.index')->with('warnmsg','No tiene los permisos necesarios para ver y/o modificar la asignatura');
+                return redirect()->route('app.cursos.index')->with('warnmsg','No tiene los permisos necesarios para ver y/o modificar el curso');
             }
         }
         else{
-            $asignaturas = auth()->user()->asignaturas()->orderByDesc('created_at')->get();
+            $cursos = auth()->user()->cursos()->orderByDesc('created_at')->get();
             return view('app.eventos.create')->with([
-                'asignaturas' => $asignaturas,
+                'cursos' => $cursos,
             ]);
         }
     }
@@ -48,7 +48,7 @@ class EventoController extends Controller
         $this->validate($request,[
             'titulo' => 'required|max:255',
             'descripcion' => 'required|max:255',
-            'asignatura' => 'required|exists:asignaturas,id',
+            'curso' => 'required|exists:cursos,id',
             'evento_video' => 'required|json',
         ]);
 
@@ -58,14 +58,14 @@ class EventoController extends Controller
             $tmpfile = json_decode($request->evento_video)->filename;
 
             try{
-                $asignatura = Asignatura::findOrFail($request->asignatura);
+                $curso = Curso::findOrFail($request->curso);
             }catch (ModelNotFoundException $e){
-                return back()->with('errormsg','La asignatura seleccionada no pudo ser obtenida');
+                return back()->with('errormsg','La curso seleccionado no pudo ser obtenida');
             }
 
             //crea el evento asociado
             $evento = new Evento;
-            $evento->asignatura()->associate($asignatura);
+            $evento->curso()->associate($curso);
             $evento->titulo = $request->titulo;
             $evento->descripcion = $request->descripcion;
             $evento->temp_directory = $tmpdir;
@@ -92,15 +92,15 @@ class EventoController extends Controller
     {
         try{
             $evento = Evento::findOrFail($id);
-            $asignatura = $evento->asignatura;
+            $curso = $evento->curso;
             $publicacion = $evento->publicacion;
             return view('app.eventos.show')->with([
                 'evento' => $evento,
                 'publicacion' => $publicacion,
-                'asignatura' => $asignatura,
+                'curso' => $curso,
             ]);
         }catch (ModelNotFoundException $e){
-            return redirect()->route('app.asignaturas.index')->with('errormsg','No se pudo cargar el evento seleccionado');
+            return redirect()->route('app.cursos.index')->with('errormsg','No se pudo cargar el evento seleccionado');
         }
     }
 
@@ -120,7 +120,7 @@ class EventoController extends Controller
             ]);
         }catch (ModelNotFoundException $exception)
         {
-            return redirect()->route('app.asignaturas.index')->with('errormsg','El evento que intenta editar no existe o no tiene los permisos suficientes para realizar la modificación');
+            return redirect()->route('app.cursos.index')->with('errormsg','El evento que intenta editar no existe o no tiene los permisos suficientes para realizar la modificación');
         }
     }
 
@@ -143,6 +143,7 @@ class EventoController extends Controller
         //0. Confirmar que se pueden hacer cambios en el evento
         if($evento->pendiente == true) return back()->with('warnmsg','No se puede actualizar el evento, hasta que los cambios pendientes no hayan terminado');
         if($evento->error == true) return back()->with('errmsg','No se puede actualizar el evento, dado que cambios anteriores finalizaron con error');
+        if($evento->publicado == false) return back()->with('errmsg','No se puede actualizar el evento mientras el proceso de publicacion no haya sido completado');
         $has_file = isset($request->evento_video);
         if ($has_file) if(json_decode($request->evento_video)->error) return back()->with('errmsg','Ocurrió un error al subir el archivo, inténtelo nuevamente');
 
@@ -208,7 +209,8 @@ class EventoController extends Controller
                 $evento->pendiente = true;
                 $evento->error = false;
                 $evento->save();
-                UploadEventoJob::dispatch($evento->id);
+                //delay to avoid error on delete previous event
+                UploadEventoJob::dispatch($evento->id)->delay(now()->addMinutes(2));
 
                 return back()->with('okmsg','El video ha sido enviado a la cola de procesamiento.');
             }
