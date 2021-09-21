@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin\Evento;
 use App\Http\Controllers\Controller;
 use App\Jobs\UpdateEventoJob;
 use App\Jobs\UploadEventoJob;
-use App\Models\Asignatura;
+use App\Models\Curso;
 use App\Models\Evento;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -36,10 +36,10 @@ class EventoController extends Controller
      */
     public function create()
     {
-        $asignaturas = Asignatura::all(['id','oc_series_name']);
+        $cursos = Curso::where('anio',now()->year)->get();
 
         return view('admin.eventos.create')->with([
-            'asignaturas' => $asignaturas,
+            'cursos' => $cursos,
         ]);
     }
 
@@ -54,7 +54,7 @@ class EventoController extends Controller
         $this->validate($request,[
            'titulo' => 'required|max:255',
            'descripcion' => 'required|max:255',
-           'asignatura' => 'required|exists:asignaturas,id',
+           'curso' => 'required|exists:cursos,id',
            'evento_video' => 'required|json',
         ]);
 
@@ -64,16 +64,16 @@ class EventoController extends Controller
             $tmpdir = json_decode($request->evento_video)->directory;
             $tmpfile = json_decode($request->evento_video)->filename;
 
-            //Encontrar la asignatura asociada en la base de datos
+            //Encontrar el curso asociado en la base de datos
             try{
-                $asignatura = Asignatura::findOrFail($request->asignatura);
+                $curso = Curso::findOrFail($request->curso);
             }catch (ModelNotFoundException $exception){
-                return back()->with(['errmsg'=>'La asignatura especificada no pudo ser encontrada']);
+                return back()->with(['errmsg'=>'El curso especificado no pudo ser encontrada']);
             }
 
             //crea el evento asociado
             $evento = new Evento;
-            $evento->asignatura()->associate($asignatura);
+            $evento->curso()->associate($curso);
             $evento->titulo = $request->titulo;
             $evento->descripcion = $request->descripcion;
             $evento->temp_directory = $tmpdir;
@@ -105,7 +105,7 @@ class EventoController extends Controller
                 return redirect()->route('admin.eventos.index')->with('warnmsg','El evento seleccionado aún no ha sido despachado al sistema de procesamiento de videos');
             }
 
-            $asignatura = $evento->asignatura;
+            $curso = $evento->curso;
             $publicacion = $evento->publicacion;
             $response = $this->getOpencastEventStatus($evento);
 
@@ -113,7 +113,7 @@ class EventoController extends Controller
             {
                 return view('admin.eventos.show')->with([
                     'evento' => $evento,
-                    'asignatura' => $asignatura,
+                    'curso' => $curso,
                     'oc_event' => $response->body(),
                     'publicacion' => $publicacion,
                 ]);
@@ -225,14 +225,12 @@ class EventoController extends Controller
 
             //Elimina el evento asociado
             $response = $this->deleteEventOpencast($evento);
+            //Elimina la publicacion asociada
+            $evento->publicacion()->delete();
             if($response->successful())
             {
-                //eliminar la publicacion asociada
-                if (isset($evento->publicacion)) $evento->publicacion()->delete();
                 $evento->evento_oc = null;
                 $evento->publicado = false;
-                $evento->pendiente = true;
-                $evento->error = false;
                 $evento->save();
                 UploadEventoJob::dispatch($evento->id);
 
@@ -241,7 +239,7 @@ class EventoController extends Controller
             else{
                 $evento->error = true;
                 $evento->save();
-                return back()->with('errormsg','Ocurrió un error al intentar eliminar el evento para su actualización, compruebe el estado del servidor Opencast');
+                return back()->with('errormsg','Ocurrió un error al intentar eliminar el evento para su actualización, inténtelo más tarde');
             }
 
         }

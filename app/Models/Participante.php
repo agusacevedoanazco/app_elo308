@@ -10,9 +10,9 @@ class Participante extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_asignatura',
+        'id_curso',
         'id_user'
     ];
 
-    
+
 }

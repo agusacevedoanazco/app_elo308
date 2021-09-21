@@ -8,19 +8,19 @@
         </div>
     </div>
     <div class="container">
-        <h2 class="text-center">Asignaturas</h2>
+        <h2 class="text-center">Mis Cursos</h2>
     </div>
     <div class="container mt-4">
-        @isset($asignaturas)
+        @isset($cursos)
         <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-1">
-            @foreach($asignaturas as $asignatura)
+            @foreach($cursos as $curso)
                     <div class="col mb-4">
                         <div class="card h-100 shadow bg-light">
-                            <div class="card-header">{{$asignatura->nombre}}</div>
+                            <div class="card-header">{{$curso->nombre}}</div>
                             <div class="card-body">
-                                {{$asignatura->oc_series_name}}
+                                {{$curso->oc_series_name}}
                             </div>
-                            <div class="card-footer"><a href="{{route('app.asignaturas.show',$asignatura)}}" class="stretched-link btn btn-block btn-primary">Acceder</a></div>
+                            <div class="card-footer"><a href="{{route('app.cursos.show',$curso)}}" class="stretched-link btn btn-block btn-primary">Acceder</a></div>
                         </div>
                     </div>
             @endforeach

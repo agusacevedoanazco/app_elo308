@@ -20,11 +20,6 @@ class Evento extends Model
         'error',
     ];
 
-    public function asignatura()
-    {
-        return $this->belongsTo(Asignatura::class,'id_asignatura','id');
-    }
-
     public function curso()
     {
         return $this->belongsTo(Curso::class,'id_curso','id');

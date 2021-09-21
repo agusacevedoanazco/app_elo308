@@ -22,7 +22,8 @@ use App\Http\Controllers\Admin\User\UserController as AdminUserController;
 use App\Http\Controllers\Admin\Asignatura\ParticipanteController as AdminAsignaturaParticipanteController;
 
 /** User Controllers */
-use App\Http\Controllers\User\HomeController as UserHomeController;
+use App\Http\Controllers\User\HomeController as AppHomeController;
+use App\Http\Controllers\User\Curso\CursoController as AppCursoController;
 use App\Http\Controllers\User\Asignatura\AsignaturaController as AppAsignaturaController;
 use App\Http\Controllers\User\Evento\EventoController as AppEventoController;
 use App\Http\Controllers\User\PerfilController;
@@ -89,7 +90,9 @@ Route::group(['middleware'=>'auth'], function (){
 
     /** User Routes */
     Route::group(['prefix' => 'app', 'as' => 'app.', 'middleware' => 'user'], function(){
-        Route::get('/home', [UserHomeController::class, 'index'])->name('homepage');
+        Route::get('/home', [AppHomeController::class, 'index'])->name('homepage');
+
+        Route::resource('/cursos',AppCursoController::class)->only(['show','index']);
 
         Route::resource('/asignaturas',AppAsignaturaController::class)->only(['show','index']);
 
