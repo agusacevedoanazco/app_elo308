@@ -44,10 +44,11 @@
 
                             @isset($curso)
                                 <div class="input-group mb-3">
-                                    <select class="form-control" name="curso" id="curso">
+                                    <select class="form-control" name="curso-mock" id="curso-mock">
                                         <option value="{{ $curso->id }}" selected disabled>{{$curso->oc_series_name}}</option>
                                     </select>
                                 </div>
+                                <input type="hidden" name="curso" id="curso" value="{{ $curso->id }}">
                             @endisset
                             @isset($cursos)
                                 <div class="input-group mb-3">

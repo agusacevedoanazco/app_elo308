@@ -169,6 +169,7 @@ class EventoController extends Controller
         //0. Confirmar que se pueden hacer cambios en el evento
         if($evento->pendiente == true) return back()->with('warnmsg','No se puede actualizar el evento, hasta que los cambios pendientes no hayan terminado');
         if($evento->error == true) return back()->with('errmsg','No se puede actualizar el evento, dado que cambios anteriores finalizaron con error');
+        if($evento->publicado == false) return back()->with('errmsg','No se puede actualizar el evento mientras el proceso de publicacion no haya sido completado');
         $has_file = isset($request->evento_video);
         if ($has_file) if(json_decode($request->evento_video)->error) return back()->with('errmsg','Ocurrió un error al subir el archivo, inténtelo nuevamente');
 
@@ -212,6 +213,7 @@ class EventoController extends Controller
             return back()->with('warnmsg','Funcionalidad en mantención');
         }
         //3. Realizar los cambios en caso de requerir la actualizacion del archivo del evento
+        //FAILING
         else
         {
             //Set the metadata
@@ -232,7 +234,8 @@ class EventoController extends Controller
                 $evento->evento_oc = null;
                 $evento->publicado = false;
                 $evento->save();
-                UploadEventoJob::dispatch($evento->id);
+                //add delay to avoid failing at removing the last event
+                UploadEventoJob::dispatch($evento->id)->delay(now()->addMinutes(2));
 
                 return back()->with('okmsg','El video ha sido enviado a la cola de procesamiento.');
             }
