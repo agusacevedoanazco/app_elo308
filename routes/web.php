@@ -13,18 +13,15 @@ use App\Http\Controllers\Auth\RegisterController;
 /** Admin Controllers */
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\Departamento\DepartamentoController;
-use App\Http\Controllers\Admin\Asignatura\AsignaturaController as AdminAsignaturaController;
 use App\Http\Controllers\Admin\Curso\CursoController as AdminCursoController;
 use App\Http\Controllers\Admin\Curso\ParticipanteController as AdminCursoParticipanteController;
 use App\Http\Controllers\Admin\Evento\EventoController as AdminEventoController;
 use App\Http\Controllers\Admin\Evento\FilepondController as AdminFilepondController;
 use App\Http\Controllers\Admin\User\UserController as AdminUserController;
-use App\Http\Controllers\Admin\Asignatura\ParticipanteController as AdminAsignaturaParticipanteController;
 
 /** User Controllers */
 use App\Http\Controllers\User\HomeController as AppHomeController;
 use App\Http\Controllers\User\Curso\CursoController as AppCursoController;
-use App\Http\Controllers\User\Asignatura\AsignaturaController as AppAsignaturaController;
 use App\Http\Controllers\User\Evento\EventoController as AppEventoController;
 use App\Http\Controllers\User\PerfilController;
 
@@ -62,15 +59,6 @@ Route::group(['middleware'=>'auth'], function (){
         Route::post('/cursos/{curso_id}/participantes',[AdminCursoParticipanteController::class,'store'])->name('cursos.participantes.store');
         Route::delete('/cursos/{curso_id}/participantes/{user_id}',[AdminCursoParticipanteController::class,'destroy'])->name('cursos.participantes.destroy');
 
-        /** Asignaturas Controllers */
-        Route::resource('/asignaturas', AdminAsignaturaController::class);
-        Route::get('/asignaturas/{id}/participantes',[AdminAsignaturaController::class,'showMembers'])->name('asignaturas.showmembers');
-
-        /** Asignaturas Participantes Controllers */
-        Route::get('/asignaturas/{id}/participantes',[AdminAsignaturaParticipanteController::class,'show'])->name('asignaturas.participantes.show');
-        Route::delete('/asignaturas/{asignatura_id}/participantes/{user_id}',[AdminAsignaturaParticipanteController::class,'destroy'])->name('asignaturas.participantes.destroy');
-        Route::post('/asignaturas/{asignatura_id}/participantes',[AdminAsignaturaParticipanteController::class,'store'])->name('asignaturas.participantes.store');
-
         /** Eventos Controllers */
         Route::resource('/eventos', AdminEventoController::class);
 
@@ -93,8 +81,6 @@ Route::group(['middleware'=>'auth'], function (){
         Route::get('/home', [AppHomeController::class, 'index'])->name('homepage');
 
         Route::resource('/cursos',AppCursoController::class)->only(['show','index']);
-
-        Route::resource('/asignaturas',AppAsignaturaController::class)->only(['show','index']);
 
         Route::get('/eventos/create/{id?}',[AppEventoController::class,'create'])->name('eventos.create');
         Route::resource('/eventos',AppEventoController::class)->except(['index','create']);

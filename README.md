@@ -233,6 +233,58 @@ php artisan key:generate
 php artisan serve --host <direccion-ip-servidor> --port <puerto>
 ```
 
-### Opción 2: Agregar al proxy reverso
+### Opción 2: Agregar al servicio nginx
 
-//TODO
+Servir la aplicacion con artisan desde la consola ofrece poco rendimiento, dado que el servicio esta pensado como servicio de pruebas, por lo tanto, en un entorno de produccion (o staging branch QA como es el caso de la memoria) se requiere servir la aplicacion mediante el servicio nginx instalado para el servidor Opencast, como es presentado en la arquitectura de solucion (no incluida en este documento, ver informe de Memoria - *En proceso*)
+
+#### Nuevo VHost
+
+Agregar un nuevo archivo de bloque de servidor asociado a la aplicacion. En este caso, la aplicacion se almacena en el directorio /var/www y se le asigna la ruta app.europa.lan (dns)
+
+```bash
+server {
+    listen 80;
+    server_name app.europa.lan;
+    root /var/www/app_elo308/public;
+
+    add_header X-Frame-Options "SAMEORIGIN";
+    add_header X-Content-Type-Options "nosniff";
+
+    index index.php;
+
+    charset utf-8;
+    client_max_body_size 0;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    error_page 404 /index.php;
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+}
+```
+
+##### Importante: directivas php
+
+En el caso de usar nginx, las directivas php modificadas en [Modificacion de Directivas](#directivas), deben ser modificadas en el archivo php.ini alojado en el directorio `/etc/php/<version>/fpm`
+
+#### Crear sym link
+
+Crear un enlace symbolico del archivo app
+
+```bash
+# ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled/app
+```
+
