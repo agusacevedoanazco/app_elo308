@@ -1,5 +1,21 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.usuarios.index') }}">Usuarios</a></li>
+        @isset($user)
+            @if($user->id != auth()->user()->id)
+                <li class="breadcrumb-item active" aria-current="page">{{$user->name}} {{$user->last_name}}</li>
+            @else
+                <li class="breadcrumb-item active" aria-current="page">Mi Perfil</li>
+            @endif
+        @endisset
+    </ol>
+@endsection
+@endsection
+
 @section('content')
     @isset($user)
         @if($user->id == auth()->user()->id)

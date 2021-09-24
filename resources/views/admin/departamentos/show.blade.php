@@ -1,5 +1,15 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.departamentos.index') }}">Departamentos</a></li>
+        @isset($departamento)
+            <li class="breadcrumb-item active" aria-current="page">{{$departamento->nombre}}</li>
+        @endisset
+    </ol>
+@endsection
+
 @section('content')
     @isset($departamento)
         @if (session()->has('okmsg'))

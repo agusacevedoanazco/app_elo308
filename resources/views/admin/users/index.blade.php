@@ -1,5 +1,23 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        @if(Request::route()->getName() == "admin.usuarios.index")
+            <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+        @else
+            <li class="breadcrumb-item"><a href="{{route('admin.usuarios.index')}}">Usuarios</a></li>
+        @endif
+        @if(Request::route()->getName() == "admin.usuarios.administradores")
+            <li class="breadcrumb-item active" aria-current="page">Administradores</li>
+        @elseif(Request::route()->getName() == "admin.usuarios.profesores")
+            <li class="breadcrumb-item active" aria-current="page">Profesores</li>
+        @elseif(Request::route()->getName() == "admin.usuarios.estudiantes")
+            <li class="breadcrumb-item active" aria-current="page">Estudiantes</li>
+        @endif
+    </ol>
+@endsection
+
 @section('content')
     @if (session()->has('okmsg'))
         <div class="alert alert-success text-center">{{ session('okmsg') }}</div>

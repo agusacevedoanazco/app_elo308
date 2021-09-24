@@ -4,6 +4,17 @@
     <link rel="stylesheet" href="https://unpkg.com/filepond@^4/dist/filepond.css">
 @endsection
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.eventos.index') }}">Eventos</a></li>
+        @isset($evento)
+            <li class="breadcrumb-item"><a href="{{ route('admin.eventos.show',$evento->id) }}">{{$evento->titulo}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Editar</li>
+        @endisset
+    </ol>
+@endsection
+
 
 @section('content')
     <div class="row justify-content-center">

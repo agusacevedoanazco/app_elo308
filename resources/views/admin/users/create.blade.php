@@ -1,5 +1,22 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.usuarios.index') }}">Usuarios</a></li>
+        @isset($rol)
+            @if($rol == 'administrador')
+                <li class="breadcrumb-item"><a href="{{ route('admin.usuarios.administradores') }}">Administradores</a></li>
+            @elseif($rol == 'profesor')
+                <li class="breadcrumb-item"><a href="{{ route('admin.usuarios.profesores') }}">Profesores</a></li>
+            @elseif($rol == 'estudiante')
+                <li class="breadcrumb-item"><a href="{{ route('admin.usuarios.estudiantes') }}">Estudiantes</a></li>
+            @endif
+        @endisset
+        <li class="breadcrumb-item active" aria-current="page">Agregar</li>
+    </ol>
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-8">

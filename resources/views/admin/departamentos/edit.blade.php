@@ -1,5 +1,16 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.departamentos.index') }}">Departamentos</a></li>
+        @isset($departamento)
+            <li class="breadcrumb-item"><a href="{{ route('admin.departamentos.show',$departamento->id) }}">{{$departamento->nombre}}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Editar</li>
+        @endisset
+    </ol>
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-8">

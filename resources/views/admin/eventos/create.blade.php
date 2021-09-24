@@ -4,6 +4,14 @@
     <link rel="stylesheet" href="https://unpkg.com/filepond@^4/dist/filepond.css">
 @endsection
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.eventos.index') }}">Eventos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Nuevo</li>
+    </ol>
+@endsection
+
 
 @section('content')
     <div class="row justify-content-center">

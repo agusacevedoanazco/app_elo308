@@ -1,5 +1,15 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{ route('admin.eventos.index') }}">Eventos</a></li>
+        @isset($evento)
+            <li class="breadcrumb-item active" aria-current="page">{{$evento->titulo}}</li>
+        @endisset
+    </ol>
+@endsection
+
 @section('content')
     @isset($curso,$evento,$oc_event)
         <div class="text-center mb-4">

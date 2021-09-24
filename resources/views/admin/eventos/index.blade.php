@@ -1,5 +1,12 @@
 @extends('layout.admin2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('admin.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Eventos</li>
+    </ol>
+@endsection
+
 @section('content')
     <div class="display-4 text-center">
         <h1>Eventos</h1>
