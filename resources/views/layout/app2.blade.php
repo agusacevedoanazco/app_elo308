@@ -43,6 +43,9 @@
             </div>
             <!-- Content --->
             <div class="col-9 rounded bg-light">
+                <nav aria-label="breadcrumb" class="ml-1 shadow-sm">
+                    @yield('breadcrumb')
+                </nav>
                 <div class="ml-1">
                     <div class="jumbotron">
                     @yield('content')

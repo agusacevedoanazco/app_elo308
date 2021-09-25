@@ -4,6 +4,20 @@
     <link rel="stylesheet" href="https://unpkg.com/filepond@^4/dist/filepond.css">
 @endsection
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('app.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{route('app.cursos.index')}}">Mis Cursos</a></li>
+        @isset($curso)
+            <li class="breadcrumb-item"><a href="{{route('app.cursos.show',$curso->id)}}">{{$curso->nombre}}</a></li>
+            <li class="breadcrumb-item"><a href="{{route('app.cursos.show',$curso->id)}}">Eventos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Agregar</li>
+        @else
+            <li class="breadcrumb-item"><a href="#">Eventos</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Agregar</li>
+        @endisset
+    </ol>
+@endsection
 
 @section('content')
     <div class="row justify-content-center">

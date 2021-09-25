@@ -1,5 +1,15 @@
 @extends('layout.app2')
 
+@section('breadcrumb')
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{route('app.homepage')}}">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="{{route('app.cursos.index')}}">Mis Cursos</a></li>
+        @isset($curso)
+            <li class="breadcrumb-item active" aria-current="page">{{$curso->nombre}}</li>
+        @endisset
+    </ol>
+@endsection
+
 @section('content')
     @isset($curso)
         <div class="text-center mb-4">
