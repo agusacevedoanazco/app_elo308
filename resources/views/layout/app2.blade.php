@@ -5,9 +5,9 @@
         <a class="navbar-brand mr-auto" href="{{ route('index') }}">Video App</a>
         <ul class="navbar-nav ml-auto">
             @auth()
-                @if(auth()->user()->roleProfesor())
+                @can('modevento')
                 <li class="nav-item text-white form-inline border-light mr-2"><a class="btn btn-success" href="{{route('app.eventos.create')}}"><i class="fa fa-video mr-2 align-middle"></i>Agregar Evento</a></li>
-                @endif
+                @endcan
                 <li class="dropdown nav-item form-inline text-white font-weight-bold border rounded pl-2">
                     <i class="fa fa-user-circle text-white mr-2" style="font-size: 32px;"></i>{{ auth()->user()->name . ' ' . auth()->user()->last_name}}
                     <button class="ml-1 btn dropdown-toggle text-white" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>

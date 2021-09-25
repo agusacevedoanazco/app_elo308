@@ -3,9 +3,11 @@
 @section('content')
     <div class="container mb-4">
         <h2 class="text-center mb-4">Bienvenido(a)</h2>
-        <div class="card">
-            <h2 class="text-muted text-center" style="margin-top: 10%;margin-bottom: 10%;">Analíticas de Video</h2>
-        </div>
+        @can('modevento')
+            <div class="card">
+                <h2 class="text-muted text-center" style="margin-top: 10%;margin-bottom: 10%;">Analíticas de Video</h2>
+            </div>
+        @endcan
     </div>
     <div class="container">
         <h2 class="text-center">Mis Cursos</h2>

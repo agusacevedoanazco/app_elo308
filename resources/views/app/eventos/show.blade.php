@@ -37,7 +37,9 @@
                             @if(!is_null($publicacion['2160p-quality_url']))
                                 <a class="nav-link" id="nav-2160p-tab" data-toggle="tab" href="#nav-2160p" role="tab" aria-controls="nav-2160p" aria-selected="false">Video 2160p</a>
                             @endif
-                            <a class="nav-link" id="nav-share-tab" data-toggle="tab" href="#nav-share" role="tab" aria-controls="nav-share" aria-selected="false">Compartir</a>
+                            @can('modevento')
+                                <a class="nav-link" id="nav-share-tab" data-toggle="tab" href="#nav-share" role="tab" aria-controls="nav-share" aria-selected="false">Compartir</a>
+                            @endcan
                         @endisset
                     </div>
                 </nav>
@@ -50,18 +52,20 @@
                             <h5 class="text-center text-muted">{{$evento->descripcion}}</h5>
                             <h6 class="text-center mb-4">{{$evento->autor}}</h6>
                             <h6 class="text-center text-muted"><b>Fecha de subida: </b>{{$evento->created_at->format('d/m/y')}}</h6>
-                            <h6 class="text-center text-muted mb-4"><b>Última edición: </b>{{$evento->updated_at->format('d/m/y')}}</h6>
-                            @if($evento->publicado)
-                                <h6 class="text-center text-success mb-4"><b>Publicado</b></h6>
-                            @else
-                                <h6 class="text-center text-secondary"><b>En proceso</b></h6>
-                            @endif
-                            @if($evento->pendiente)
-                                <h6 class="text-center text-secondary"><b>En cola</b></h6>
-                            @endif
-                            @if($evento->error)
-                                <h6 class="text-center text-danger"><b>Error!</b></h6>
-                            @endif
+                            @can('modevento')
+                                <h6 class="text-center text-muted mb-4"><b>Última edición: </b>{{$evento->updated_at->format('d/m/y')}}</h6>
+                                @if($evento->publicado)
+                                    <h6 class="text-center text-success mb-4"><b>Publicado</b></h6>
+                                @else
+                                    <h6 class="text-center text-secondary"><b>En proceso</b></h6>
+                                @endif
+                                @if($evento->pendiente)
+                                    <h6 class="text-center text-secondary"><b>En cola</b></h6>
+                                @endif
+                                @if($evento->error)
+                                    <h6 class="text-center text-danger"><b>Error!</b></h6>
+                                @endif
+                            @endcan
                         </div>
                     </div>
                     @isset($publicacion)
@@ -96,6 +100,7 @@
                                 </div>
                             </div>
                         @endif
+                        @can('modevento')
                         <div class="tab-pane fade" id="nav-share" role="tabpanel" aria-labelledby="nav-share-tab">
                             <div class="row row-cols-1 row-cols-md-2">
                                 @if(!is_null($publicacion['360p-quality_url']))
@@ -173,9 +178,9 @@
                                         document.getElementById('2160p-iframe').textContent = '<iframe src="{!! $publicacion['2160p-quality_url'] !!}" width="3840" height="2160"></iframe>';
                                     </script>
                                 @endif
-
                             </div>
                         </div>
+                        @endcan
                     @endisset
                 </div>
             </div>

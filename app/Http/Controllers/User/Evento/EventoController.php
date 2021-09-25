@@ -19,6 +19,8 @@ class EventoController extends Controller
      */
     public function create(int $id = null)
     {
+        $this->authorize('modevento');
+
         if (isset($id)){
             try{
                 $curso = Curso::findOrFail($id);
@@ -45,6 +47,8 @@ class EventoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('modevento');
+
         $this->validate($request,[
             'titulo' => 'required|max:255',
             'descripcion' => 'required|max:255',
@@ -112,6 +116,8 @@ class EventoController extends Controller
      */
     public function edit($id)
     {
+        $this->authorize('modevento');
+
         try
         {
             $evento = Evento::findOrFail($id);
@@ -133,6 +139,8 @@ class EventoController extends Controller
      */
     public function update(Request $request, Evento $evento)
     {
+        $this->authorize('modevento');
+
         $this->validate($request,[
             'titulo' => 'required|max:255',
             'descripcion' => 'required|max:255',
@@ -231,6 +239,8 @@ class EventoController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('modevento');
+
         try{
             $evento = Evento::findOrFail($id);
             if (isset($evento->evento_oc)) {

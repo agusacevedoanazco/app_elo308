@@ -22,8 +22,15 @@
                     <div class="nav nav-pills nav-fill nav-justified card-header-pills" id="nav-tab" role="tablist">
                         <a class="nav-link active" id="nav-eventos-tab" data-toggle="tab" href="#nav-eventos" role="tab" aria-controls="nav-eventos" aria-selected="true">Eventos</a>
                         <a class="nav-link" id="nav-participantes-tab" data-toggle="tab" href="#nav-participantes" role="tab" aria-controls="nav-participantes" aria-selected="false">Participantes</a>
-                        <a class="nav-link" id="nav-listado-tab" data-toggle="tab" href="#nav-listado" role="tab" aria-controls="nav-listado" aria-selected="false">Administrar</a>
-                        <a href="{{route('app.eventos.create',$curso->id)}}" class="nav-link text-white bg-success"><i class="fa fa-video mr-2 align-middle"></i>Agregar Evento</a>
+                        @can('modevento')
+                            <a class="nav-link" id="nav-listado-tab" data-toggle="tab" href="#nav-listado" role="tab" aria-controls="nav-listado" aria-selected="false">Administrar</a>
+                        @endcan
+                        @cannot('modevento')
+                            <a class="nav-link" id="nav-listado-tab" data-toggle="tab" href="#nav-listado" role="tab" aria-controls="nav-listado" aria-selected="false">Listado</a>
+                        @endcan
+                        @can('modevento')
+                            <a href="{{route('app.eventos.create',$curso->id)}}" class="nav-link text-white bg-success"><i class="fa fa-video mr-2 align-middle"></i>Agregar Evento</a>
+                        @endcan
                     </div>
                 </nav>
             </div>
@@ -93,36 +100,49 @@
                                 <tr>
                                     <th scope="col">Titulo</th>
                                     <th scope="col">Fecha</th>
-                                    <th scope="col">Publicado</th>
-                                    <th scope="col">Estado</th>
+                                    @can('modevento')
+                                        <th scope="col">Publicado</th>
+                                        <th scope="col">Estado</th>
+                                    @endcan
                                     <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
-                                    <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
-                                    <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
+                                    @can('modevento')
+                                        <th scope="col"><div class="text-center"><i class="fa fa-edit"></i></div></th>
+                                        <th scope="col"><div class="text-center"><i class="fa fa-trash"></i></div></th>
+                                    @endcan
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @foreach($eventos as $evento)
-                                    <tr>
-                                    <td>{{$evento->titulo}}</td>
-                                    <td>{{$evento->created_at->format('d-m-y')}}</td>
-                                    @if($evento->publicado)
-                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                    @else
-                                        <td class="text-center text-primary"><i class=" far fa-hourglass"></i></td>
-                                    @endif
-                                    @if($evento->error)
-                                        <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>
-                                    @else
-                                        <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                    @endif
-                                    <td class="text-center"><a href="{{route('app.eventos.show',$evento)}}" class="btn btn-primary">Ver</a></td>
-                                    <td class="text-center"><a href="{{route('app.eventos.edit',$evento)}}" class="btn btn-warning">Editar</a></td>
-                                    <td class="text-center"><form action="{{route('app.eventos.destroy',$evento)}}" method="post">
-                                            @csrf
-                                            @method('delete')
-                                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                                        </form></td>
-                                    </tr>
+                                    @can('modevento')
+                                        <tr>
+                                        <td>{{$evento->titulo}}</td>
+                                        <td>{{$evento->created_at->format('d-m-y')}}</td>
+                                        @if($evento->publicado)
+                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                        @else
+                                            <td class="text-center text-primary"><i class=" far fa-hourglass"></i></td>
+                                        @endif
+                                        @if($evento->error)
+                                            <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>
+                                        @else
+                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                        @endif
+                                        <td class="text-center"><a href="{{route('app.eventos.show',$evento)}}" class="btn btn-primary">Ver</a></td>
+                                        <td class="text-center"><a href="{{route('app.eventos.edit',$evento)}}" class="btn btn-warning">Editar</a></td>
+                                        <td class="text-center"><form action="{{route('app.eventos.destroy',$evento)}}" method="post">
+                                                @csrf
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form></td>
+                                        </tr>
+                                    @endcan
+                                    @cannot('modevento')
+                                        @if($evento->publicado)
+                                            <td>{{$evento->titulo}}</td>
+                                            <td>{{$evento->created_at->format('d-m-y')}}</td>
+                                            <td class="text-center"><a href="{{route('app.eventos.show',$evento)}}" class="btn btn-primary">Ver</a></td>
+                                        @endif
+                                    @endcan
                                 @endforeach
                                 </tbody>
                             </table>
