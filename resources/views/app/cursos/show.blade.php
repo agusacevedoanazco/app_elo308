@@ -42,15 +42,30 @@
                                 @if($eventos->count())
                                     <div class="row row-cols-1 row-cols-lg-3 row-cols-sm-1">
                                         @foreach($eventos as $evento)
-                                            <div class="col mb-4">
-                                                <div class="card h-100 shadow bg-light">
-                                                    <div class="card-header">{{$evento->titulo}}</div>
-                                                    <div class="card-body">
-                                                        {{$evento->descripcion}}
+                                            @can('modevento')
+                                                <div class="col mb-4">
+                                                    <div class="card h-100 shadow bg-light">
+                                                        <div class="card-header">{{$evento->titulo}}</div>
+                                                        <div class="card-body">
+                                                            {{$evento->descripcion}}
+                                                        </div>
+                                                        <div class="card-footer"><a href="{{route('app.eventos.show',$evento)}}" class="stretched-link btn btn-block btn-primary">Acceder</a></div>
                                                     </div>
-                                                    <div class="card-footer"><a href="{{route('app.eventos.show',$evento)}}" class="stretched-link btn btn-block btn-primary">Acceder</a></div>
                                                 </div>
-                                            </div>
+                                            @endcan
+                                            @cannot('modevento')
+                                                @if($evento->publicado)
+                                                    <div class="col mb-4">
+                                                        <div class="card h-100 shadow bg-light">
+                                                            <div class="card-header">{{$evento->titulo}}</div>
+                                                            <div class="card-body">
+                                                                {{$evento->descripcion}}
+                                                            </div>
+                                                            <div class="card-footer"><a href="{{route('app.eventos.show',$evento)}}" class="stretched-link btn btn-block btn-primary">Acceder</a></div>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endcan
                                         @endforeach
                                     </div>
                                 @else
@@ -101,8 +116,8 @@
                                     <th scope="col">Titulo</th>
                                     <th scope="col">Fecha</th>
                                     @can('modevento')
-                                        <th scope="col">Publicado</th>
-                                        <th scope="col">Estado</th>
+                                        <th scope="col" class="text-center">Publicado</th>
+                                        <th scope="col" class="text-center">Enviado</th>
                                     @endcan
                                     <th scope="col"><div class="text-center"><i class="fas fa-eye"></i></div></th>
                                     @can('modevento')
@@ -117,15 +132,20 @@
                                         <tr>
                                         <td>{{$evento->titulo}}</td>
                                         <td>{{$evento->created_at->format('d-m-y')}}</td>
-                                        @if($evento->publicado)
-                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
-                                        @else
-                                            <td class="text-center text-primary"><i class=" far fa-hourglass"></i></td>
-                                        @endif
                                         @if($evento->error)
                                             <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>
+                                            <td class="text-center text-danger"><i class="fas fa-exclamation-triangle"></i></td>
                                         @else
-                                            <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                            @if($evento->publicado)
+                                                <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                            @else
+                                                <td class="text-center text-primary"><i class="far fa-hourglass"></i></td>
+                                            @endif
+                                            @if($evento->pendiente)
+                                                <td class="text-center text-primary"><i class="far fa-hourglass"></i></td>
+                                            @else
+                                                <td class="text-center text-success"><i class="far fa-check-circle"></i></td>
+                                            @endif
                                         @endif
                                         <td class="text-center"><a href="{{route('app.eventos.show',$evento)}}" class="btn btn-primary">Ver</a></td>
                                         <td class="text-center"><a href="{{route('app.eventos.edit',$evento)}}" class="btn btn-warning">Editar</a></td>

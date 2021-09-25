@@ -30,6 +30,9 @@ class CursoController extends Controller
     {
         try{
             $curso = Curso::findOrFail($id);
+
+            $this->authorize('participa',$curso);
+
             $profesores = $curso->usuarios()->where('role',1)->orderByDesc('last_name')->get();
             $estudiantes = $curso->usuarios()->where('role',2)->orderByDesc('last_name')->get();
             $eventos = $curso->eventos()->orderByDesc('created_at')->get();

@@ -24,6 +24,7 @@ class EventoController extends Controller
         if (isset($id)){
             try{
                 $curso = Curso::findOrFail($id);
+                $this->authorize('participa',$curso);
                 return view('app.eventos.create')->with([
                     'curso' => $curso,
                 ]);
@@ -97,6 +98,7 @@ class EventoController extends Controller
         try{
             $evento = Evento::findOrFail($id);
             $curso = $evento->curso;
+            $this->authorize('participa',$curso);
             $publicacion = $evento->publicacion;
             return view('app.eventos.show')->with([
                 'evento' => $evento,
@@ -121,6 +123,7 @@ class EventoController extends Controller
         try
         {
             $evento = Evento::findOrFail($id);
+            $this->authorize('participa',$evento->curso);
             return view('app.eventos.edit')->with([
                 "evento" => $evento,
             ]);
