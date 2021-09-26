@@ -14,3 +14,7 @@ const mix = require('laravel-mix');
 mix.js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .sourceMaps();
+
+mix.js('resources/js/videojs.js', 'public/js')
+    .sass('resources/sass/videojs.scss', 'public/css')
+    .sourceMaps();

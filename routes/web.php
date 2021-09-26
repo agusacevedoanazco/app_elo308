@@ -8,7 +8,10 @@ use App\Http\Controllers\HomePageController;
 /** Auth Controllers */
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\Auth\RegisterController;
+
+/** Dev Controllers */
+/** No deben estar en servidor en produccion */
+use App\Http\Controllers\DevPageController;
 
 /** Admin Controllers */
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
@@ -37,8 +40,9 @@ Route::get('/', [HomePageController::class, 'index'])->name('index');
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'store']);
 
-Route::get('/signup', [RegisterController::class, 'index'])->name('signup');
-Route::post('/signup', [RegisterController::class, 'store']);
+Route::group(['prefix'=>'dev','as'=>'dev.'], function(){
+    Route::get('/video',[DevPageController::class,'show'])->name('video');
+});
 
 /** Authenticated Routes */
 Route::group(['middleware'=>'auth'], function (){

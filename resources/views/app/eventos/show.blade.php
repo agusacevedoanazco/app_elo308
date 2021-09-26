@@ -1,5 +1,9 @@
 @extends('layout.app2')
 
+@section('customcss')
+    <link rel="stylesheet" href="{{ asset('css/videojs.css') }}">
+@endsection
+
 @section('breadcrumb')
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{route('app.homepage')}}">Inicio</a></li>
@@ -26,17 +30,7 @@
                     <div class="nav nav-tabs card-header-tabs" id="nav-tab" role="tablist">
                         <a class="nav-link active" id="nav-info-tab" data-toggle="tab" href="#nav-info" role="tab" aria-controls="nav-info" aria-selected="true">Información</a>
                         @isset($publicacion)
-                            <a class="nav-link" id="nav-360p-tab" data-toggle="tab" href="#nav-360p" role="tab" aria-controls="nav-360p" aria-selected="false">Video 360p</a>
-                            @if(!is_null($publicacion['480p-quality_url']))
-                                <a class="nav-link" id="nav-480p-tab" data-toggle="tab" href="#nav-480p" role="tab" aria-controls="nav-480p" aria-selected="false">Video 480p</a>
-                            @endif
-                            <a class="nav-link" id="nav-720p-tab" data-toggle="tab" href="#nav-720p" role="tab" aria-controls="nav-720p" aria-selected="false">Video 720p</a>
-                            @if(!is_null($publicacion['1080p-quality_url']))
-                                <a class="nav-link" id="nav-1080p-tab" data-toggle="tab" href="#nav-1080p" role="tab" aria-controls="nav-1080p" aria-selected="false">Video 1080p</a>
-                            @endif
-                            @if(!is_null($publicacion['2160p-quality_url']))
-                                <a class="nav-link" id="nav-2160p-tab" data-toggle="tab" href="#nav-2160p" role="tab" aria-controls="nav-2160p" aria-selected="false">Video 2160p</a>
-                            @endif
+                            <a class="nav-link" id="nav-video-tab" data-toggle="tab" href="#nav-video" aria-controls="nav-video" aria-selected="false">Video</a>
                             @can('modevento')
                                 <a class="nav-link" id="nav-share-tab" data-toggle="tab" href="#nav-share" role="tab" aria-controls="nav-share" aria-selected="false">Compartir</a>
                             @endcan
@@ -69,37 +63,17 @@
                         </div>
                     </div>
                     @isset($publicacion)
-                        <div class="tab-pane fade" id="nav-360p" role="tabpanel" aria-labelledby="nav-360p-tab">
-                            <div class="text-center overflow-auto">
-                                <video controls src="{{$publicacion['360p-quality_url']}}" type="{{$publicacion['mediatype']}}"></video>
+                        <div class="tab-pane fade" id="nav-video" role="tabpanel" aria-labelledby="nav-video-tab">
+                            <div class="container">
+                                <video id="player" class="video-js vjs-default-skin vjs-big-play-centered vjs-show-big-play-button-on-pause">
+                                    @if(!is_null($publicacion['360p-quality_url']))<source label="360P" selected="true" src="{{ $publicacion['360p-quality_url'] }}" type="{{ $publicacion->mediatype }}">@endif
+                                    @if(!is_null($publicacion['480p-quality_url']))<source label="480P" src="{{ $publicacion['380p-quality_url'] }}" type="{{ $publicacion->mediatype }}">@endif
+                                    @if(!is_null($publicacion['720p-quality_url']))<source label="720P" src="{{ $publicacion['720p-quality_url'] }}" type="{{ $publicacion->mediatype }}">@endif
+                                    @if(!is_null($publicacion['1080p-quality_url']))<source label="1080P" src="{{ $publicacion['1080p-quality_url'] }}" type="{{ $publicacion->mediatype }}">@endif
+                                    @if(!is_null($publicacion['2160p-quality_url']))<source label="2160P" src="{{ $publicacion['2160p-quality_url'] }}" type="{{ $publicacion->mediatype }}">@endif
+                                </video>
                             </div>
                         </div>
-                        @if(!is_null($publicacion['480p-quality_url']))
-                            <div class="tab-pane fade" id="nav-480p" role="tabpanel" aria-labelledby="nav-480p-tab">
-                                <div class="text-center overflow-auto">
-                                    <video controls src="{{$publicacion['480p-quality_url']}}" type="{{$publicacion['mediatype']}}"></video>
-                                </div>
-                            </div>
-                        @endif
-                        <div class="tab-pane fade" id="nav-720p" role="tabpanel" aria-labelledby="nav-720p-tab">
-                            <div class="text-center overflow-auto">
-                                <video controls src="{{$publicacion['720p-quality_url']}}" type="{{$publicacion['mediatype']}}"></video>
-                            </div>
-                        </div>
-                        @if(!is_null($publicacion['1080p-quality_url']))
-                            <div class="tab-pane fade" id="nav-1080p" role="tabpanel" aria-labelledby="nav-1080p-tab">
-                                <div class="text-center overflow-auto">
-                                    <video controls src="{{$publicacion['1080p-quality_url']}}" type="{{$publicacion['mediatype']}}"></video>
-                                </div>
-                            </div>
-                        @endif
-                        @if(!is_null($publicacion['2160p-quality_url']))
-                            <div class="tab-pane fade" id="nav-2160p" role="tabpanel" aria-labelledby="nav-2160p-tab">
-                                <div class="text-center overflow-auto">
-                                    <video controls src="{{$publicacion['2160p-quality_url']}}" type="{{$publicacion['mediatype']}}"></video>
-                                </div>
-                            </div>
-                        @endif
                         @can('modevento')
                         <div class="tab-pane fade" id="nav-share" role="tabpanel" aria-labelledby="nav-share-tab">
                             <div class="row row-cols-1 row-cols-md-2">
@@ -188,6 +162,9 @@
     @else
         <div class="alert alert-danger text-center">No se pudo cargar el evento!</div>
     @endisset
+@endsection
+
+@section('scripts')
     <script>
         function copytoclipboard(id){
             var text = document.getElementById(id);
@@ -196,4 +173,5 @@
             alert('Copiado al portapapeles.');
         }
     </script>
+    <script src="{{ asset('js/videojs.js') }}"></script>
 @endsection
