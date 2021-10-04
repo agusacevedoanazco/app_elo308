@@ -22,8 +22,11 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
+        "@datapunt/matomo-tracker-js": "^0.5.1",
         "@fortawesome/fontawesome-free": "^5.15.4",
         "@silvermine/videojs-quality-selector": "^1.2.5",
-        "video.js": "^7.15.4"
+        "plausible-tracker": "^0.3.1",
+        "video.js": "^7.15.4",
+        "videojs-event-tracking": "^1.0.2"
     }
 }
