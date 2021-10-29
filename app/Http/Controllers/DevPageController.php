@@ -14,52 +14,43 @@ class DevPageController extends Controller
         //api call pool
         //TODO
         //timeseries
-        $uri = env('PLAUSIBLE_STATS_API_URL') . 'timeseries';
+        $uri = env('PLAUSIBLE_URL') . '/api/v1/stats/' . 'timeseries';
         $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
             ->acceptJson()
             ->get($uri,[
                 'site_id'=> env('PLAUSIBLE_SITE_ID'),
-                'period' => '7d',
-                'filters' => 'event:path==/app/eventos/'.$publicacion->id,
+                'period' => '30d',
+                'filters' => 'event:page==/app/eventos/'.$publicacion->evento->id,
             ]);
-        if ($response->successful()) $timeseries = $response->object()->results;
+        $timeseries = ($response->successful()) ? $response->body() : null;
         //total
-        $uri = env('PLAUSIBLE_STATS_API_URL') . 'aggregate';
+        $uri = env('PLAUSIBLE_URL') . '/api/v1/stats/' . 'aggregate';
         $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
             ->acceptJson()
             ->get($uri,[
                 'site_id'=> env('PLAUSIBLE_SITE_ID'),
                 'metrics' => 'pageviews,visit_duration,visitors',
-                'filters' => 'event:path==/app/eventos/'.$publicacion->id,
+                'period' => '6mo',
+                'filters' => 'event:page==/app/eventos/'.$publicacion->evento->id,
             ]);
-        if ($response->successful()) $totalstats = $response->object()->results;
-        //position
-        $uri = env('PLAUSIBLE_STATS_API_URL') . 'breakdown';
+        $totalstats =  ($response->successful()) ? $response->body() : null;
+        $uri = env('PLAUSIBLE_URL') . '/api/v1/stats/' .  'breakdown';
         $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
             ->acceptJson()
             ->get($uri,[
                 'site_id'=> env('PLAUSIBLE_SITE_ID'),
                 'period' => '6mo',
-                'filters' => 'event:path==/app/eventos/'.$publicacion->id,
+                'filters' => 'event:page==/app/eventos/'.$publicacion->evento->id,
                 'property' => 'event:props:position'
             ]);
-        if ($response->successful()) $position = $response->object()->results;
-        //playpause
-        $uri = env('PLAUSIBLE_STATS_API_URL') . 'breakdown';
-        $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
-            ->acceptJson()
-            ->get($uri,[
-                'site_id'=> env('PLAUSIBLE_SITE_ID'),
-                'period' => '6mo',
-                'filters' => 'event:path==/app/eventos/'.$publicacion->id,
-                'property' => 'event:props:play'
-            ]);
-        if ($response->successful()) $playpause = $response->object()->results;
-        dd($playpause);
-
+        $bounce = ($response->successful()) ? json_encode($response->object()->results) : null;
 
         return view('dev')->with([
             'publicacion' => $publicacion,
+            'analiticas' => true,
+            'timeseries' => $timeseries,
+            'totalstats' => $totalstats,
+            'bounce' => $bounce,
         ]);
     }
 }

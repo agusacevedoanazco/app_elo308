@@ -33,6 +33,7 @@
                             <a class="nav-link" id="nav-video-tab" data-toggle="tab" href="#nav-video" aria-controls="nav-video" aria-selected="false">Video</a>
                             @can('modevento')
                                 <a class="nav-link" id="nav-share-tab" data-toggle="tab" href="#nav-share" role="tab" aria-controls="nav-share" aria-selected="false">Compartir</a>
+                                <a href="{{route('app.eventos.analiticas',$evento->id)}}" class="nav-pills nav-link">Analíticas <i class="fas fa-external-link-alt"></i></a>
                             @endcan
                         @endisset
                     </div>

@@ -23,6 +23,7 @@
                         <div class="tab-pane fade show active" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
                             <div class="jumbotron">
                                 <h1 class="text-center">Informacion</h1>
+                                <h2 class="text-center text-muted">{{$publicacion->evento->id}}</h2>
                             </div>
                         </div>
                         <div class="tab-pane fade" id="nav-video" role="tabpanel" aria-labelledby="nav-video-tab">
@@ -39,7 +40,23 @@
                         @isset($analiticas)
                             <div class="tab-pane fade" id="nav-analytics" role="tabpanel" aria-labelledby="nav-analytics-tab">
                                 <div class="jumbotron">
-                                    <h1>Analiticas</h1>
+                                    <h1>Analiticas {{$publicacion->evento->id}}</h1>
+                                    <div class="card-group">
+                                        <div class="card">
+                                            <pre class="card-body" id="timeseries"></pre>
+                                        </div>
+                                        <div class="card">
+                                            <pre class="card-body" id="totalstats"></pre>
+                                        </div>
+                                    </div>
+                                    <div class="card-group">
+                                        <div class="card">
+                                            <pre class="card-body" id="position"></pre>
+                                        </div>
+                                        <div class="card">
+                                            <pre class="card-body" id="playpause"></pre>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         @endisset
@@ -52,4 +69,9 @@
 
 @section('scripts')
     <script src="{{ asset('js/videojs.js') }}"></script>
+    <script>
+        //document.getElementById('timeseries').textContent = JSON.stringify(eval({!! $timeseries !!}),undefined,2);
+        //document.getElementById('totalstats').textContent = JSON.stringify(eval({!! $totalstats !!}),undefined,2);
+        document.getElementById('position').textContent = JSON.stringify(eval({!! $bounce !!}),undefined,2);
+    </script>
 @endsection

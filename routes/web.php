@@ -65,6 +65,7 @@ Route::group(['middleware'=>'auth'], function (){
 
         /** Eventos Controllers */
         Route::resource('/eventos', AdminEventoController::class);
+        Route::get('/eventos/{id}/analiticas',[AdminEventoController::class,'analiticas'])->name('eventos.analiticas');
 
         /** Upload Controllers */
         Route::post('/upload/filepond',[AdminFilepondController::class,'store'])->name('filepond');
@@ -88,6 +89,7 @@ Route::group(['middleware'=>'auth'], function (){
 
         Route::get('/eventos/create/{id?}',[AppEventoController::class,'create'])->name('eventos.create');
         Route::resource('/eventos',AppEventoController::class)->except(['index','create']);
+        Route::get('/eventos/{id}/analiticas',[AppEventoController::class,'analiticas'])->name('eventos.analiticas');
 
         Route::post('/upload/filepond',[AdminFilepondController::class,'store'])->name('filepond');
         Route::delete('/upload/filepond',[AdminFilepondController::class,'destroy']);

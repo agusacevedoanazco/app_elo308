@@ -36,7 +36,7 @@ player.on('tracking:firstplay', (e,data)=> {
                 'video-play',
                 {
                     props : {
-                        play : 'first-play'
+                        position : 'start'
                     }
                 }
             );
@@ -44,19 +44,9 @@ player.on('tracking:firstplay', (e,data)=> {
         }
     }
 );
-player.on('tracking:pause', () => {
-    plausible.trackEvent(
-        'video-play',
-        {
-            props : {
-                play : 'pause',
-            }
-        }
-    );
-});
 player.on('tracking:first-quarter',()=>{
     plausible.trackEvent(
-        'video-positioning',
+        'video-play',
         {
             props : {
                 position : 'reach-firstquarter',
@@ -66,7 +56,7 @@ player.on('tracking:first-quarter',()=>{
 });
 player.on('tracking:second-quarter',()=>{
     plausible.trackEvent(
-        'video-positioning',
+        'video-play',
         {
             props : {
                 position : 'reach-half',
@@ -76,7 +66,7 @@ player.on('tracking:second-quarter',()=>{
 });
 player.on('tracking:third-quarter',()=>{
     plausible.trackEvent(
-        'video-positioning',
+        'video-play',
         {
             props : {
                 position : 'reach-thirdquarter',
@@ -86,7 +76,7 @@ player.on('tracking:third-quarter',()=>{
 });
 player.on('tracking:fourth-quarter',()=>{
     plausible.trackEvent(
-        'video-positioning',
+        'video-play',
         {
             props : {
                 position : 'reach-end',

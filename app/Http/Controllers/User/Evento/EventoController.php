@@ -273,6 +273,53 @@ class EventoController extends Controller
         }
     }
 
+    public function analiticas(int $id){
+        $this->authorize('modevento');
+
+        try{
+            $evento = Evento::findOrFail($id);
+            $uri = env('PLAUSIBLE_URL') . '/api/v1/stats/' . 'timeseries';
+            $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
+                ->acceptJson()
+                ->get($uri,[
+                    'site_id'=> env('PLAUSIBLE_SITE_ID'),
+                    'period' => '30d',
+                    'filters' => 'event:page==/app/eventos/'.$evento->id,
+                ]);
+            $timeseries = ($response->successful()) ? json_encode($response->object()->results) : null;
+            //total
+            $uri = env('PLAUSIBLE_URL') . '/api/v1/stats/' . 'aggregate';
+            $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
+                ->acceptJson()
+                ->get($uri,[
+                    'site_id'=> env('PLAUSIBLE_SITE_ID'),
+                    'metrics' => 'pageviews,visitors',
+                    'period' => '6mo',
+                    'filters' => 'event:page==/app/eventos/'.$evento->id,
+                ]);
+            $totalstats = ($response->successful()) ? $response->object()->results : null;
+            //position
+            $uri = env('PLAUSIBLE_URL') . '/api/v1/stats/' .  'breakdown';
+            $response = Http::withToken(env('PLAUSIBLE_API_KEY'))
+                ->acceptJson()
+                ->get($uri,[
+                    'site_id'=> env('PLAUSIBLE_SITE_ID'),
+                    'period' => '6mo',
+                    'filters' => 'event:page==/app/eventos/'.$evento->id,
+                    'property' => 'event:props:position'
+                ]);
+            $bounce = ($response->successful()) ? json_encode($response->object()->results) : null;
+            return view('app.eventos.analiticas')->with([
+                'evento' => $evento,
+                'timeseries' => $timeseries,
+                'totalstats' => $totalstats,
+                'bounce' => $bounce,
+            ]);
+        }catch (ModelNotFoundException $e){
+            return redirect()->route('app.eventos.index');
+        }
+    }
+
     /**
      * Update event metadata, doesn't modify the event files
      *
